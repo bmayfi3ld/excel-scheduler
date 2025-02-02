@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docs on Excel Class Scheduler</title>
+    <link>https://example.com/docs/</link>
+    <description>Recent content in Docs on Excel Class Scheduler</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="https://example.com/docs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Scheduler Rules</title>
+      <link>https://example.com/docs/rules/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://example.com/docs/rules/</guid>
+      <description>&lt;h1 id=&#34;scheduler-rules&#34;&gt;&#xA;  Scheduler Rules&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#scheduler-rules&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;There are a number of rules you can use, they are listed here along with how&#xA;to configure them on the &lt;code&gt;Rules&lt;/code&gt; sheet. When a rule has been broken the cell&#xA;will be highlighted &lt;code&gt;Red&lt;/code&gt; and a comment will note the infraction reasons.&lt;/p&gt;&#xA;&lt;p&gt;Rules are added by adding the rule name to the first row of the &lt;code&gt;Rules&lt;/code&gt; sheet.&#xA;Each column will specifcy a new rule along with its options in the cell under&#xA;the name.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Setup A New Workbook</title>
+      <link>https://example.com/docs/setup/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://example.com/docs/setup/</guid>
+      <description>&lt;h1 id=&#34;setup-a-new-workbook&#34;&gt;&#xA;  Setup A New Workbook&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#setup-a-new-workbook&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Just need two sheets, &lt;code&gt;Rules&lt;/code&gt; and &lt;code&gt;Schedule&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
