@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
   <!-- Background -->
   <rect x="40" y="40" width="120" height="120" rx="10" fill="#217346" />
-  
+
   <!-- Excel grid lines -->
   <path d="M50 80 L150 80 M50 120 L150 120" stroke="white" stroke-width="2" opacity="0.3"/>
   <path d="M80 50 L80 150 M120 50 L120 150" stroke="white" stroke-width="2" opacity="0.3"/>
-  
+
   <!-- Clock hands -->
   <circle cx="100" cy="100" r="30" fill="none" stroke="white" stroke-width="4"/>
   <line x1="100" y1="100" x2="100" y2="80" stroke="white" stroke-width="4"/>
-  <line x1="100" y1="100" x2="115" y2="100" stroke="white" stroke-width="4"/>
-  
+  <line x1="98" y1="100" x2="115" y2="100" stroke="white" stroke-width="4"/>
+
   <!-- X symbol (Excel) -->
   <path d="M140 50 L155 65 M155 50 L140 65" stroke="white" stroke-width="3"/>
 </svg>
