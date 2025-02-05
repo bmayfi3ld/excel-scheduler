@@ -6,8 +6,8 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Excel Scheduler"/>
   <Description DefaultValue="A simple addon to schedule classes."/>
-  <IconUrl DefaultValue="https://localhost:22234/assets/schedule-manager-logo.svg"/>
-  <HighResolutionIconUrl DefaultValue="https://localhost:22234/assets/schedule-manager-logo.svg"/>
+  <IconUrl DefaultValue="https://localhost:22234/assets/schedule-manager-logo.png"/>
+  <HighResolutionIconUrl DefaultValue="https://localhost:22234/assets/schedule-manager-logo.png"/>
   <SupportUrl DefaultValue="https://www.contoso.com/help"/>
   <AppDomains>
     <AppDomain>https://www.contoso.com</AppDomain>
@@ -72,13 +72,13 @@
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:22234/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GetStarted.Title" DefaultValue="Get started with your sample add-in!"/>
-        <bt:String id="CommandsGroup.Label" DefaultValue="Commands Group"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Show Task Pane"/>
+        <bt:String id="GetStarted.Title" DefaultValue="You have installed class scheduler!"/>
+        <bt:String id="CommandsGroup.Label" DefaultValue="Class Scheduler"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Open Class Scheduler"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="GetStarted.Description" DefaultValue="Your sample add-in loaded successfully. Go to the HOME tab and click the 'Show Task Pane' button to get started."/>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Click to Show a Taskpane"/>
+        <bt:String id="GetStarted.Description" DefaultValue="Class scheduler has installed successfully. Go to the HOME tab and click the 'Open Class Scheduler' button to get started."/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Click to open Class Scheduler"/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>

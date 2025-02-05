@@ -1,8 +1,3 @@
-/*
- * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
- * See LICENSE in the project root for license information.
- */
-
 /* global console, document, Excel, Office */
 
 Office.onReady((info) => {
@@ -18,6 +13,8 @@ export async function run() {
   // Get the icon element
   const icon = document.querySelector(".ms-Icon");
   console.log("Starting validation script");
+
+  await clear();
 
   try {
     // Log icon state
@@ -47,11 +44,31 @@ export async function run() {
       console.log(`Sheet dimensions: ${scheduleRange.rowCount} rows, ${scheduleRange.columnCount} columns`);
       console.log("Full range values:", scheduleRange.values);
 
-      // Get Values for Rules
-      const rulesSheet = context.workbook.worksheets.getItem("Rules");
+      // Get Values and Set Note for Rules
+      const allCohorts = await getValuesFromSheet(context, "AllCohorts");
+      console.log("Valid values:", allCohorts);
+      //       addValidationToColumn(
+      //         context,
+      //         "AllCohorts",
+      //         "AllCohorts",
+      //         `Each cohort must be a valid cohort from the AllCohorts List
 
-      const allClasses = ["PKA", "2nd"];
-      console.log("Valid values:", allClasses);
+      // eg: If you put 53rd into the schedule and that isn't in the list, it will be
+      // marked.
+
+      // **Configuration**:
+
+      // Just a list of all possible cohorts.
+
+      // eg:
+
+
+      // | AllClasses |
+      // | ---------- |
+      // | 1st        |
+      // | 2nd        |
+      // | 3rd        |`
+      //       );
 
       // Iterate through each cell, starting from row 2 (skip header) and column 2 (skip first column)
       for (let row = 1; row < scheduleRange.rowCount; row++) {
@@ -60,7 +77,7 @@ export async function run() {
           console.log(`Checking cell at row ${row + 1}, column ${col + 1}:`, {
             value: cellValue,
             isEmpty: !cellValue,
-            isValid: allClasses.includes(cellValue),
+            isValid: allCohorts.values.includes(cellValue),
           });
 
           // Skip empty cells
@@ -70,7 +87,7 @@ export async function run() {
           }
 
           // Check if the value is not in the valid list
-          if (!allClasses.includes(cellValue)) {
+          if (!allCohorts.values.includes(cellValue)) {
             console.log(`Invalid value found: "${cellValue}"`);
 
             // Get the specific cell
@@ -83,7 +100,12 @@ export async function run() {
 
             try {
               // Add comment using Excel.Comment
-              scheduleSheet.comments.add(cell, "This class isn't in the total list of classes");
+              scheduleSheet.comments.add(
+                cell,
+                "This class isn't in the total list of classes, check column " +
+                allCohorts.column +
+                " on the rules sheet."
+              );
               console.log("Added comment successfully");
             } catch (commentError) {
               console.error("Error adding comment:", commentError);
@@ -106,6 +128,114 @@ export async function run() {
       console.log("Restored icon to original state:", icon.className);
     }
     console.log("Script execution completed");
+  }
+}
+
+// Helper function to convert column index to letter
+function getColumnLetter(columnIndex) {
+  let temp = columnIndex;
+  let letter = "";
+
+  while (temp >= 0) {
+    letter = String.fromCharCode((temp % 26) + 65) + letter;
+    temp = Math.floor(temp / 26) - 1;
+  }
+
+  return letter;
+}
+
+async function getValuesFromSheet(context, headerValue) {
+  try {
+    const rulesSheet = context.workbook.worksheets.getItem("Rules");
+
+    // Find the header cell containing the specified value
+    const range = rulesSheet.getUsedRange();
+    range.load("values");
+    await context.sync();
+
+    let startRow = -1;
+    const values = range.values;
+
+    // Find the row with the header value
+    for (let i = 0; i < values.length; i++) {
+      if (values[i].includes(headerValue)) {
+        startRow = i;
+        break;
+      }
+    }
+
+    if (startRow === -1) {
+      throw new Error(`Header '${headerValue}' not found`);
+    }
+
+    // Get the column index where header was found
+    const columnIndex = values[startRow].indexOf(headerValue);
+
+    // Convert column index to letter
+    const columnLetter = getColumnLetter(columnIndex);
+
+    // Create array of values (excluding the header)
+    const resultArray = values
+      .slice(startRow + 1) // Start from next row after header
+      .map((row) => row[columnIndex]) // Get value from the same column
+      .filter((value) => value !== ""); // Remove empty values
+
+    return {
+      values: resultArray,
+      column: columnLetter,
+    };
+  } catch (error) {
+    console.error("Error: ", error);
+    throw error;
+  }
+}
+
+/**
+ * wip
+ * @param {Excel.RequestContext} context
+ */
+async function addValidationToColumn(context, headerValue, validationTitle, validationMessage) {
+  try {
+    const rulesSheet = context.workbook.worksheets.getItem("Rules");
+
+    // Find the header cell containing the specified value
+    const range = rulesSheet.getUsedRange();
+    range.load("values");
+    range.load("address");
+    await context.sync();
+
+    let startRow = -1;
+    const values = range.values;
+
+    // Find the row with the header value
+    for (let i = 0; i < values.length; i++) {
+      if (values[i].includes(headerValue)) {
+        startRow = i;
+        break;
+      }
+    }
+
+    if (startRow === -1) {
+      throw new Error(`Header '${headerValue}' not found`);
+    }
+
+    // Get the column index where header was found
+    const columnIndex = values[startRow].indexOf(headerValue);
+
+    // Create range for validation (from header row + 1 to last row)
+    const validationRange = rulesSheet.getRange(`${columnIndex}${startRow + 2}`);
+
+    // Add data validation
+    validationRange.dataValidation.prompt = {
+      title: validationTitle,
+      message: validationMessage,
+      showInputMessage: true,
+    };
+
+    await context.sync();
+  } catch (error) {
+    console.error("Error: ", error);
+    throw error;
   }
 }
 
