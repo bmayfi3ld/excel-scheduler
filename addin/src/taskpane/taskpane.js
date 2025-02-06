@@ -47,28 +47,12 @@ export async function run() {
       // Get Values and Set Note for Rules
       const allCohorts = await getValuesFromSheet(context, "AllCohorts");
       console.log("Valid values:", allCohorts);
-      //       addValidationToColumn(
-      //         context,
-      //         "AllCohorts",
-      //         "AllCohorts",
-      //         `Each cohort must be a valid cohort from the AllCohorts List
-
-      // eg: If you put 53rd into the schedule and that isn't in the list, it will be
-      // marked.
-
-      // **Configuration**:
-
-      // Just a list of all possible cohorts.
-
-      // eg:
-
-
-      // | AllClasses |
-      // | ---------- |
-      // | 1st        |
-      // | 2nd        |
-      // | 3rd        |`
-      //       );
+      addValidationToColumn(
+        context,
+        "AllCohorts",
+        "AllCohorts",
+        "A list of all the cohorts. eg: 1st, 2nd, 3rd"
+      );
 
       // Iterate through each cell, starting from row 2 (skip header) and column 2 (skip first column)
       for (let row = 1; row < scheduleRange.rowCount; row++) {
@@ -178,7 +162,6 @@ async function getValuesFromSheet(context, headerValue) {
     const resultArray = values
       .slice(startRow + 1) // Start from next row after header
       .map((row) => row[columnIndex]) // Get value from the same column
-      .filter((value) => value !== ""); // Remove empty values
 
     return {
       values: resultArray,
@@ -191,8 +174,11 @@ async function getValuesFromSheet(context, headerValue) {
 }
 
 /**
- * wip
+ * add a validation tooltip to a the found cell
  * @param {Excel.RequestContext} context
+ * @param {string} headerValue
+ * @param {string} validationTitle
+ * @param {string} validationMessage
  */
 async function addValidationToColumn(context, headerValue, validationTitle, validationMessage) {
   try {
@@ -204,38 +190,26 @@ async function addValidationToColumn(context, headerValue, validationTitle, vali
     range.load("address");
     await context.sync();
 
-    let startRow = -1;
     const values = range.values;
 
-    // Find the row with the header value
-    for (let i = 0; i < values.length; i++) {
-      if (values[i].includes(headerValue)) {
-        startRow = i;
-        break;
-      }
-    }
-
-    if (startRow === -1) {
-      throw new Error(`Header '${headerValue}' not found`);
-    }
-
     // Get the column index where header was found
-    const columnIndex = values[startRow].indexOf(headerValue);
+    const columnIndex = values[0].indexOf(headerValue);
 
-    // Create range for validation (from header row + 1 to last row)
-    const validationRange = rulesSheet.getRange(`${columnIndex}${startRow + 2}`);
+    console.log("adding validation to row 0 and column " + columnIndex);
+    const validationRange = rulesSheet.getCell(0, columnIndex);
 
     // Add data validation
+    validationRange.dataValidation.clear();
+
     validationRange.dataValidation.prompt = {
-      title: validationTitle,
       message: validationMessage,
-      showInputMessage: true,
+      showPrompt: true,
+      title: validationTitle
     };
 
     await context.sync();
   } catch (error) {
     console.error("Error: ", error);
-    throw error;
   }
 }
 
