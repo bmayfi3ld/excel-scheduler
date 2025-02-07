@@ -1,5 +1,6 @@
 +++
 title = 'Scheduler Rules'
+weight = 30
 +++
 # Scheduler Rules
 
@@ -23,7 +24,7 @@ eg:
 |            | 3rd                       |             |
 
 ## AllCohorts
-Each cohort must be a valid cohort from the AllCohorts List
+Require each cohort on the schedule to be a valid cohort from this AllCohorts list.
 
 eg: If you put 53rd into the schedule and that isn't in the list, it will be
 marked.
@@ -40,3 +41,8 @@ eg:
 | 1st        |
 | 2nd        |
 | 3rd        |
+
+
+## DestinationRequiresSetup
+
+These destinations are in separate buildings

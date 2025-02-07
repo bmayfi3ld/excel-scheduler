@@ -2,24 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Docs on Excel Class Scheduler</title>
-    <link>https://example.com/docs/</link>
+    <link>http://localhost:1313/docs/</link>
     <description>Recent content in Docs on Excel Class Scheduler</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <atom:link href="https://example.com/docs/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/docs/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Scheduler Rules</title>
-      <link>https://example.com/docs/rules/</link>
+      <title>Install The App</title>
+      <link>http://localhost:1313/docs/install/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://example.com/docs/rules/</guid>
-      <description>&lt;h1 id=&#34;scheduler-rules&#34;&gt;&#xA;  Scheduler Rules&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#scheduler-rules&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;There are a number of rules you can use, they are listed here along with how&#xA;to configure them on the &lt;code&gt;Rules&lt;/code&gt; sheet. When a rule has been broken the cell&#xA;will be highlighted &lt;code&gt;Red&lt;/code&gt; and a comment will note the infraction reasons.&lt;/p&gt;&#xA;&lt;p&gt;Rules are added by adding the rule name to the first row of the &lt;code&gt;Rules&lt;/code&gt; sheet.&#xA;Each column will specifcy a new rule along with its options in the cell under&#xA;the name.&lt;/p&gt;</description>
+      <guid>http://localhost:1313/docs/install/</guid>
+      <description>&lt;h1 id=&#34;install-the-app&#34;&gt;&#xA;  Install The App&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#install-the-app&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Currently there is only a developer release, so you will have to install it&#xA;&amp;ldquo;manually&amp;rdquo; from the manifest file. (Said another way, it is not in the excel&#xA;app store).&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Download the latest app manifest file.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Go here &lt;a href=&#34;https://github.com/bmayfi3ld/excel-scheduler/blob/main/addin/manifest.xml&#34;&gt;https://github.com/bmayfi3ld/excel-scheduler/blob/main/addin/manifest.xml&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;Click the little download button. &lt;code&gt;Download raw file&lt;/code&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Install that manifest into your excel&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Open your workbook&lt;/li&gt;&#xA;&lt;li&gt;Click on &lt;code&gt;Add-ins&lt;/code&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/add_ins_bar.png&#34; alt=&#34;add-in button&#34; /&gt;&lt;/p&gt;&#xA;&lt;ol start=&#34;3&#34;&gt;&#xA;&lt;li&gt;Click &lt;code&gt;More Add-ins&lt;/code&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/more_add_ins.png&#34; alt=&#34;more add-ins&#34; /&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Setup A New Workbook</title>
-      <link>https://example.com/docs/setup/</link>
+      <link>http://localhost:1313/docs/setup/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://example.com/docs/setup/</guid>
-      <description>&lt;h1 id=&#34;setup-a-new-workbook&#34;&gt;&#xA;  Setup A New Workbook&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#setup-a-new-workbook&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Just need two sheets, &lt;code&gt;Rules&lt;/code&gt; and &lt;code&gt;Schedule&lt;/code&gt;.&lt;/p&gt;</description>
+      <guid>http://localhost:1313/docs/setup/</guid>
+      <description>&lt;h1 id=&#34;setup-a-new-workbook&#34;&gt;&#xA;  Setup A New Workbook&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#setup-a-new-workbook&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;Just need two sheets, &lt;code&gt;Rules&lt;/code&gt; and &lt;code&gt;Schedule&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;h2 id=&#34;schedule-sheet&#34;&gt;&#xA;  Schedule Sheet&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#schedule-sheet&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Destination is anywhere (or anything) that a cohort would want to do/go&#xA;to/participate in.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Scheduler Rules</title>
+      <link>http://localhost:1313/docs/rules/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/docs/rules/</guid>
+      <description>&lt;h1 id=&#34;scheduler-rules&#34;&gt;&#xA;  Scheduler Rules&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#scheduler-rules&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;p&gt;There are a number of rules you can use, they are listed here along with how&#xA;to configure them on the &lt;code&gt;Rules&lt;/code&gt; sheet. When a rule has been broken the cell&#xA;will be highlighted &lt;code&gt;Red&lt;/code&gt; and a comment will note the infraction reasons.&lt;/p&gt;&#xA;&lt;p&gt;Rules are added by adding the rule name to the first row of the &lt;code&gt;Rules&lt;/code&gt; sheet.&#xA;Each column will specifcy a new rule along with its options in the cell under&#xA;the name.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

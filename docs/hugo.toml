@@ -10,3 +10,4 @@ path = 'github.com/alex-shpak/hugo-book'
 [params]
 BookTheme = 'auto'
 BookSection = 'docs'
+BookRepo = 'https://github.com/bmayfi3ld/excel-scheduler'
