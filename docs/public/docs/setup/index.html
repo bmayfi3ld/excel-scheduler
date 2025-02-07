@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=42775&amp;path=livereload" data-no-instant defer></script>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="
@@ -12,25 +12,86 @@ Just need two sheets, Rules and Schedule.
   Schedule Sheet
   #
 
-Destination is anywhere (or anything) that a cohort would want to do/go
-to/participate in.">
+The schedule sheet will be a single table with timeslots across the first row
+and classes as the first column.
+The sheet must be named Schedule
+eg:
+
+  
+      
+          
+          Monday, 9am
+          Monday, 10am
+          Monday, 11am
+          Monday, 12pm
+          More Times..
+      
+  
+  
+      
+          Latin Cart
+          1st
+          4th
+          
+          
+          
+      
+      
+          Lunch Cart
+          
+          
+          1st
+          2nd
+          
+      
+      
+          Preschool Art
+          
+          
+          3rd
+          4th
+          
+      
+      
+          PE Gym Section A
+          
+          
+          1st
+          2nd
+          
+      
+      
+          More Classes&hellip;
+          
+          
+          1st
+          2nd
+          
+      
+  
+
+A class is anywhere (or anything) that a single cohort would want to do/go
+to/participate in. This is not necesarily just a list of &ldquo;classes&rdquo; or &ldquo;specials&rdquo;">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
-<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/docs/setup/">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:42775/docs/setup/">
   <meta property="og:site_name" content="Excel Class Scheduler">
   <meta property="og:title" content="Setup A New Workbook">
   <meta property="og:description" content="Setup A New Workbook # Just need two sheets, Rules and Schedule.
-Schedule Sheet # Destination is anywhere (or anything) that a cohort would want to do/go to/participate in.">
+Schedule Sheet # The schedule sheet will be a single table with timeslots across the first row and classes as the first column.
+The sheet must be named Schedule
+eg:
+Monday, 9am Monday, 10am Monday, 11am Monday, 12pm More Times.. Latin Cart 1st 4th Lunch Cart 1st 2nd Preschool Art 3rd 4th PE Gym Section A 1st 2nd More Classes… 1st 2nd A class is anywhere (or anything) that a single cohort would want to do/go to/participate in. This is not necesarily just a list of “classes” or “specials”">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="docs">
 <title>Setup A New Workbook | Excel Class Scheduler</title>
 <link rel="icon" href="/favicon.png" >
 <link rel="manifest" href="/manifest.json">
-<link rel="canonical" href="http://localhost:1313/docs/setup/">
+<link rel="canonical" href="http://localhost:42775/docs/setup/">
 <link rel="stylesheet" href="/book.min.434035e7885c7f5d12818bd9f111cf1a0925c6fb78382667381c3d5eda3fb4f1.css" integrity="sha256-Q0A154hcf10SgYvZ8RHPGgklxvt4OCZnOBw9Xto/tPE=" crossorigin="anonymous">
   <script defer src="/fuse.min.js"></script>
-  <script defer src="/en.search.min.c07f9f0ea55220a8e133b5180d354a7c68d9bf992561125a587ee8e507b71849.js" integrity="sha256-wH&#43;fDqVSIKjhM7UYDTVKfGjZv5klYRJaWH7o5Qe3GEk=" crossorigin="anonymous"></script>
+  <script defer src="/en.search.min.234cf574f4f0e64a0d387abe18906781fa8fbb247339afffafb4775280da1ce4.js" integrity="sha256-I0z1dPTw5koNOHq&#43;GJBngfqPuyRzOa//r7R3UoDaHOQ=" crossorigin="anonymous"></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -166,6 +227,8 @@ https://github.com/alex-shpak/hugo-book
 <nav id="TableOfContents">
   <ul>
     <li><a href="#schedule-sheet">Schedule Sheet</a></li>
+    <li><a href="#rules-sheet">Rules Sheet</a></li>
+    <li><a href="#optional-classroom-sheet">Optional Classroom Sheet</a></li>
   </ul>
 </nav>
 
@@ -187,8 +250,129 @@ https://github.com/alex-shpak/hugo-book
   Schedule Sheet
   <a class="anchor" href="#schedule-sheet">#</a>
 </h2>
-<p>Destination is anywhere (or anything) that a cohort would want to do/go
-to/participate in.</p>
+<p>The schedule sheet will be a single table with timeslots across the first row
+and classes as the first column.</p>
+<p>The sheet must be named <code>Schedule</code></p>
+<p>eg:</p>
+<table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>Monday, 9am</th>
+          <th>Monday, 10am</th>
+          <th>Monday, 11am</th>
+          <th>Monday, 12pm</th>
+          <th><em>More Times..</em></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Latin Cart</td>
+          <td>1st</td>
+          <td>4th</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>Lunch Cart</td>
+          <td></td>
+          <td></td>
+          <td>1st</td>
+          <td>2nd</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>Preschool Art</td>
+          <td></td>
+          <td></td>
+          <td>3rd</td>
+          <td>4th</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>PE Gym Section A</td>
+          <td></td>
+          <td></td>
+          <td>1st</td>
+          <td>2nd</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><em>More Classes&hellip;</em></td>
+          <td></td>
+          <td></td>
+          <td>1st</td>
+          <td>2nd</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p>A class is anywhere (or anything) that a single cohort would want to do/go
+to/participate in. This is not necesarily just a list of &ldquo;classes&rdquo; or &ldquo;specials&rdquo;</p>
+<p>Here are some examples:</p>
+<ul>
+<li>Pre-school Art</li>
+<li>PE in Big Gym A</li>
+<li>PE in Big Gym B (if two cohorts take gym at the same time, just make two &ldquo;sections&rdquo; for that class)</li>
+<li>Latin Cart (maybe not a physical location, but the cart travels to the homeroom of the cohort)</li>
+</ul>
+<h2 id="rules-sheet">
+  Rules Sheet
+  <a class="anchor" href="#rules-sheet">#</a>
+</h2>
+<p>The rules sheet will have the list of rules to apply to the schedule. Each rule
+will have its own column and will be configured with the rows below it.</p>
+<p>This sheet must be named <code>Rules</code></p>
+<p>eg:</p>
+<table>
+  <thead>
+      <tr>
+          <th>AllCohorts</th>
+          <th>ClassRequiresTravel</th>
+          <th><em>More Rules&hellip;</em></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1st</td>
+          <td>Latin</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>2nd</td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>3rd</td>
+          <td>1st</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>2nd</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>3rd</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p>Check the <a href="http://localhost:42775/docs/rules/">Scheduler Rules</a> page for all available rules.</p>
+<h2 id="optional-classroom-sheet">
+  Optional Classroom Sheet
+  <a class="anchor" href="#optional-classroom-sheet">#</a>
+</h2>
+<p>This is a flexible sheet that might take advantage of the &hellip;.</p>
+<p>TODO make function and docs</p>
 </article>
  
       
@@ -231,6 +415,8 @@ to/participate in.</p>
 <nav id="TableOfContents">
   <ul>
     <li><a href="#schedule-sheet">Schedule Sheet</a></li>
+    <li><a href="#rules-sheet">Rules Sheet</a></li>
+    <li><a href="#optional-classroom-sheet">Optional Classroom Sheet</a></li>
   </ul>
 </nav>
 

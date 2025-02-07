@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=42775&amp;path=livereload" data-no-instant defer></script>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="
@@ -15,7 +15,7 @@ Each column will specifcy a new rule along with its options in the cell under
 the name.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
-<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/docs/rules/">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:42775/docs/rules/">
   <meta property="og:site_name" content="Excel Class Scheduler">
   <meta property="og:title" content="Scheduler Rules">
   <meta property="og:description" content="Scheduler Rules # There are a number of rules you can use, they are listed here along with how to configure them on the Rules sheet. When a rule has been broken the cell will be highlighted Red and a comment will note the infraction reasons.
@@ -26,10 +26,10 @@ Rules are added by adding the rule name to the first row of the Rules sheet. Eac
 <title>Scheduler Rules | Excel Class Scheduler</title>
 <link rel="icon" href="/favicon.png" >
 <link rel="manifest" href="/manifest.json">
-<link rel="canonical" href="http://localhost:1313/docs/rules/">
+<link rel="canonical" href="http://localhost:42775/docs/rules/">
 <link rel="stylesheet" href="/book.min.434035e7885c7f5d12818bd9f111cf1a0925c6fb78382667381c3d5eda3fb4f1.css" integrity="sha256-Q0A154hcf10SgYvZ8RHPGgklxvt4OCZnOBw9Xto/tPE=" crossorigin="anonymous">
   <script defer src="/fuse.min.js"></script>
-  <script defer src="/en.search.min.c07f9f0ea55220a8e133b5180d354a7c68d9bf992561125a587ee8e507b71849.js" integrity="sha256-wH&#43;fDqVSIKjhM7UYDTVKfGjZv5klYRJaWH7o5Qe3GEk=" crossorigin="anonymous"></script>
+  <script defer src="/en.search.min.234cf574f4f0e64a0d387abe18906781fa8fbb247339afffafb4775280da1ce4.js" integrity="sha256-I0z1dPTw5koNOHq&#43;GJBngfqPuyRzOa//r7R3UoDaHOQ=" crossorigin="anonymous"></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -165,7 +165,7 @@ https://github.com/alex-shpak/hugo-book
 <nav id="TableOfContents">
   <ul>
     <li><a href="#allcohorts">AllCohorts</a></li>
-    <li><a href="#destinationrequiressetup">DestinationRequiresSetup</a></li>
+    <li><a href="#classrequirestravel">ClassRequiresTravel</a></li>
   </ul>
 </nav>
 
@@ -193,7 +193,7 @@ the name.</p>
   <thead>
       <tr>
           <th>AllCohorts</th>
-          <th>DestinationRequiresTravel</th>
+          <th>ClassRequiresTravel</th>
           <th><em>More Rules&hellip;</em></th>
       </tr>
   </thead>
@@ -230,6 +230,9 @@ the name.</p>
       </tr>
   </tbody>
 </table>
+<p>Often when you are configuring a rules in a single column, the rule with use <code>breaks</code>
+to space out the different options. A break is just an empty cell. Notice above
+ther is a <code>break</code> between <code>Latin</code> and <code>1st</code>.</p>
 <h2 id="allcohorts">
   AllCohorts
   <a class="anchor" href="#allcohorts">#</a>
@@ -258,11 +261,146 @@ marked.</p>
       </tr>
   </tbody>
 </table>
-<h2 id="destinationrequiressetup">
-  DestinationRequiresSetup
-  <a class="anchor" href="#destinationrequiressetup">#</a>
+<h2 id="classrequirestravel">
+  ClassRequiresTravel
+  <a class="anchor" href="#classrequirestravel">#</a>
 </h2>
-<p>These destinations are in separate buildings</p>
+<p>Certain cohorts can not have certain classes sequentially. This could be due to setup
+and teardown requirements or if a teacher has to physically travel to the cohort
+and they are far apart.</p>
+<p>eg: If there is a class called <code>Lunch Cart</code> or maybe <code>Latin Cart</code> or <code>Homeroom Art</code>
+where the class physically travels to the homeroom of the cohort to teach the
+class. The class cannot be taught to certain cohorts sequentially if they are in different
+buildings.</p>
+<p><strong>Configuration</strong>:</p>
+<p>A repeating pattern of <code>Class Name</code>, <code>break</code>, <code>all cohorts that located near each other</code>, <code>break</code>, <code>another group of cohorts located near each other</code> and then
+the pattern of <code>group of cohorts</code> <code>break</code> can continue for as many groups as you
+want to setup for this class (perhaps you have 4 buildings, then you could have 4 groups).</p>
+<p>Then add a <code>double break</code> and you can add another class.</p>
+<p>eg:</p>
+<p>Here we have two classes that need travel spacing <code>Latin Cart</code> which will be a
+cart that has to physcially travel to the homeroom of the classes and <code>Lunch Cart</code>
+which also has to travel. You will notice the double break between the two classes.</p>
+<p>We can notice that it looks like 1st, 2nd, 3rd are in the same building as well as
+4th, 5th, 6th in one and 7th, 8th, 9th in  another.</p>
+<p>7th, 8th, 9th do not take the &ldquo;Latin Cart&rdquo; class in this example, so they are
+not included in the latin cart options.</p>
+<table>
+  <thead>
+      <tr>
+          <th>AllClasses</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Latin Cart</td>
+      </tr>
+      <tr>
+          <td></td>
+      </tr>
+      <tr>
+          <td>1st</td>
+      </tr>
+      <tr>
+          <td>2nd</td>
+      </tr>
+      <tr>
+          <td>3rd</td>
+      </tr>
+      <tr>
+          <td></td>
+      </tr>
+      <tr>
+          <td>4th</td>
+      </tr>
+      <tr>
+          <td>5th</td>
+      </tr>
+      <tr>
+          <td>6th</td>
+      </tr>
+      <tr>
+          <td></td>
+      </tr>
+      <tr>
+          <td></td>
+      </tr>
+      <tr>
+          <td>Lunch Cart</td>
+      </tr>
+      <tr>
+          <td></td>
+      </tr>
+      <tr>
+          <td>1st</td>
+      </tr>
+      <tr>
+          <td>2nd</td>
+      </tr>
+      <tr>
+          <td>3rd</td>
+      </tr>
+      <tr>
+          <td></td>
+      </tr>
+      <tr>
+          <td>4th</td>
+      </tr>
+      <tr>
+          <td>5th</td>
+      </tr>
+      <tr>
+          <td>6th</td>
+      </tr>
+      <tr>
+          <td></td>
+      </tr>
+      <tr>
+          <td>7th</td>
+      </tr>
+      <tr>
+          <td>8th</td>
+      </tr>
+      <tr>
+          <td>9th</td>
+      </tr>
+  </tbody>
+</table>
+<p>So here we would get one error if the schedule looked like this.</p>
+<table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>Monday, 9am</th>
+          <th>Monday, 10am</th>
+          <th>Monday, 11am</th>
+          <th>Monday, 12pm</th>
+          <th>&hellip;</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Latin Cart</td>
+          <td>1st</td>
+          <td>4th</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>Lunch Cart</td>
+          <td></td>
+          <td></td>
+          <td>1st</td>
+          <td>2nd</td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<p>We get an error for <code>Latin Cart</code> at <code>Monday, 10am</code> because the cart cannot travel
+from wherever 1st is located to wherever 4th is located in the transition time.</p>
+<p>We do not get an error for the lunch cart because 1st and 2nd homeroom are close
+enough to each other.</p>
 </article>
  
       
@@ -305,7 +443,7 @@ marked.</p>
 <nav id="TableOfContents">
   <ul>
     <li><a href="#allcohorts">AllCohorts</a></li>
-    <li><a href="#destinationrequiressetup">DestinationRequiresSetup</a></li>
+    <li><a href="#classrequirestravel">ClassRequiresTravel</a></li>
   </ul>
 </nav>
 
