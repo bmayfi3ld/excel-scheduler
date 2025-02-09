@@ -99,9 +99,7 @@ export async function run() {
             console.log(`Invalid cohort found: "${cellValue}"`);
 
             brokenRules.push(
-              "This class isn't in the total list of classes, check column " +
-                allCohortsConfig.column +
-                " on the Rules sheet."
+              `The cohort '${cellValue}' isn't in the total list of classes, check column '${allCohortsConfig.column}' on the Rules sheet.`
             );
           }
 
@@ -139,7 +137,7 @@ export async function run() {
               for (let i = 1; i < classTravelConfig.length; i++) {
                 if (i !== foundClassBuilding && classTravelConfig[i].includes(priorCellValue)) {
                   brokenRules.push(
-                    `The class ${className} can't go to one cohort ${cellValue} if the previous one was ${priorCellValue}, it is too far away (or requires setup) see column ${classRequiresTravelConfig.column} on the Rules sheet`
+                    `The class '${className}' can't go to one cohort '${cellValue}' if the previous one was '${priorCellValue}', it is too far away (or requires setup) see column '${classRequiresTravelConfig.column}' on the Rules sheet`
                   );
                   break;
                 }
