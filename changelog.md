@@ -16,6 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - the AllCohorts rule, and docs
-- the RequiresBuildingTravel rule, and docs (todo)
+- the ClassRequiresTravel rule, and docs
 - the FindClassCohortIsIn function (todo)
 - initial website

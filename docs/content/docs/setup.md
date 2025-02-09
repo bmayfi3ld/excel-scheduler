@@ -11,6 +11,9 @@ Just need two sheets, `Rules` and `Schedule`.
 The schedule sheet will be a single table with timeslots across the first row
 and classes as the first column.
 
+The timeslots must be in the format `Day, Hour` for the function `FindCohortClass` to
+work.
+
 The sheet must be named `Schedule`
 
 eg:
