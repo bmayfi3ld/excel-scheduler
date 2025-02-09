@@ -6,8 +6,8 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Excel Scheduler"/>
   <Description DefaultValue="A simple addon to schedule classes."/>
-  <IconUrl DefaultValue="https://localhost:22234/assets/schedule-manager-logo.png"/>
-  <HighResolutionIconUrl DefaultValue="https://localhost:22234/assets/schedule-manager-logo.png"/>
+  <IconUrl DefaultValue="https://localhost:22234/assets/schedule-manager-logo.svg"/>
+  <HighResolutionIconUrl DefaultValue="https://localhost:22234/assets/schedule-manager-logo.svg"/>
   <SupportUrl DefaultValue="https://www.contoso.com/help"/>
   <AppDomains>
     <AppDomain>https://www.contoso.com</AppDomain>
@@ -22,6 +22,20 @@
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
     <Hosts>
       <Host xsi:type="Workbook">
+        <AllFormFactors>
+          <ExtensionPoint xsi:type="CustomFunctions">
+            <Script>
+              <SourceLocation resid="Functions.Script.Url"/>
+            </Script>
+            <Page>
+              <SourceLocation resid="Shared.Url"/>
+            </Page>
+            <Metadata>
+              <SourceLocation resid="Functions.Metadata.Url"/>
+            </Metadata>
+            <Namespace resid="Functions.Namespace"/>
+          </ExtensionPoint>
+        </AllFormFactors>
         <DesktopFormFactor>
           <GetStarted>
             <Title resid="GetStarted.Title"/>
@@ -62,16 +76,20 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://localhost:22234/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://localhost:22234/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://localhost:22234/assets/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://localhost:22234/assets/schedule-manager-logo.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://localhost:22234/assets/schedule-manager-logo.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://localhost:22234/assets/schedule-manager-logo.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812"/>
+        <bt:Url id="Functions.Script.Url" DefaultValue="https://localhost:22234/functions.js"/>
+        <bt:Url id="Functions.Metadata.Url" DefaultValue="https://localhost:22234/functions.json"/>
         <bt:Url id="Commands.Url" DefaultValue="https://localhost:22234/commands.html"/>
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:22234/taskpane.html"/>
+
       </bt:Urls>
       <bt:ShortStrings>
+        <bt:String id="Functions.Namespace" DefaultValue="CLASSSCHEDULER"/>
         <bt:String id="GetStarted.Title" DefaultValue="You have installed class scheduler!"/>
         <bt:String id="CommandsGroup.Label" DefaultValue="Class Scheduler"/>
         <bt:String id="TaskpaneButton.Label" DefaultValue="Open Class Scheduler"/>
