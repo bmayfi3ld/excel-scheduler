@@ -150,22 +150,23 @@ export async function run() {
           // add errors
           if (brokenRules.length != 0) {
             console.log(`adding broken rules ${brokenRules}`);
-
-            // Get the specific cell
             const cell = scheduleRange.getCell(row, col);
-
-            // Set fill color to red
             cell.format.fill.color = "red";
 
-            brokenRules.forEach((comment) => {
-              try {
-                // Add comment using Excel.Comment
-                scheduleSheet.comments.add(cell, comment);
-                console.log(`Added comment ${comment} successfully`);
-              } catch (commentError) {
-                console.error("Error adding comment:", commentError);
-              }
-            });
+            // Create main comment
+            const mainComment = "Rule Infractions:";
+            try {
+              const comment = scheduleSheet.comments.add(cell, mainComment);
+
+              // Add each broken rule as a reply
+              brokenRules.forEach((rule) => {
+                comment.replies.add(rule);
+              });
+
+              console.log("Added comment with replies successfully");
+            } catch (error) {
+              console.error("Error adding comment:", error);
+            }
           }
         }
       }
