@@ -1,15 +1,16 @@
 /* eslint-disable no-undef */
 
-const devCerts = require("office-addin-dev-certs");
+// const devCerts = require("office-addin-dev-certs");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CustomFunctionsMetadataPlugin = require("custom-functions-metadata-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const urlDev = "https://localhost:22234/";
-const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
+const urlProd = "https://app.excelscheduler.field3.systems/";
 
 async function getHttpsOptions() {
-  const httpsOptions = await devCerts.getHttpsServerOptions();
-  return { ca: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
+//   const httpsOptions = await devCerts.getHttpsServerOptions();
+//   return { ca: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
 }
 
 module.exports = async (env, options) => {
@@ -19,6 +20,7 @@ module.exports = async (env, options) => {
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       taskpane: ["./src/taskpane/taskpane.js", "./src/taskpane/taskpane.html"],
+      functions: "./src/functions/functions.js",
       commands: "./src/commands/commands.js",
     },
     output: {
@@ -42,7 +44,7 @@ module.exports = async (env, options) => {
           use: "html-loader",
         },
         {
-          test: /\.(png|jpg|jpeg|gif|ico)$/,
+          test: /\.(png|jpg|jpeg|gif|ico|svg)$/,
           type: "asset/resource",
           generator: {
             filename: "assets/[name][ext][query]",
@@ -51,6 +53,10 @@ module.exports = async (env, options) => {
       ],
     },
     plugins: [
+      new CustomFunctionsMetadataPlugin({
+        output: "functions.json",
+        input: "./src/functions/functions.js",
+      }),
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
