@@ -10,8 +10,9 @@ app store).
 
 - Download the latest app manifest file.
 
-1. Go here https://github.com/bmayfi3ld/excel-scheduler/blob/main/addin/manifest.xml
-2. Click the little download button. `Download raw file`
+{{< button href="https://app.excelscheduler.field3.systems/manifest.xml" download="manifest.xml" >}}
+Download Manifest
+{{< /button >}}
 
 - Install that manifest into your excel
 
