@@ -1,0 +1,29 @@
+{{- $ref := "" }}
+{{- with .Get "href" -}}
+  {{- $ref = . -}}
+{{- end -}}
+{{- with .Get "relref" -}}
+  {{- $ref = relref $ . -}}
+{{- end -}}
+<a {{ with $ref }} href="{{.}}" {{ end }}
+   onclick="downloadFile(event, '{{$ref}}', '{{.Get "download"}}')"
+   class="book-btn{{ with .Get "class" }} {{ . }}{{ end }}">
+  {{- .InnerDeindent -}}
+</a>
+<script>
+function downloadFile(e, url, filename) {
+    e.preventDefault();
+    fetch(url)
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        });
+}
+</script>

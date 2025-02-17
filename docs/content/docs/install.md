@@ -10,13 +10,15 @@ app store).
 
 - Download the latest app manifest file.
 
-{{< button href="https://app.excelscheduler.field3.systems/manifest.xml" download="manifest.xml" >}}
+1. Click the below button to download `manifest.xml` to your computer.
+
+{{< download-button href="https://app.excelscheduler.field3.systems/manifest.xml" download="manifest.xml">}}
 Download Manifest
-{{< /button >}}
+{{< /download-button >}}
 
 - Install that manifest into your excel
 
-1. Open your workbook
+1. Open your workbook (any file that you want to use)
 2. Click on `Add-ins`
 
 ![add-in button](/add_ins_bar.png)
