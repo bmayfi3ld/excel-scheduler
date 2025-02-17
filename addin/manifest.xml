@@ -8,9 +8,9 @@
   <Description DefaultValue="A simple addon to schedule classes."/>
   <IconUrl DefaultValue="https://localhost:22234/assets/schedule-manager-logo.svg"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:22234/assets/schedule-manager-logo.svg"/>
-  <SupportUrl DefaultValue="https://www.contoso.com/help"/>
+  <SupportUrl DefaultValue="docs.excelscheduler.field3.systems"/>
   <AppDomains>
-    <AppDomain>https://www.contoso.com</AppDomain>
+    <AppDomain>https://localhost:22234</AppDomain>
   </AppDomains>
   <Hosts>
     <Host Name="Workbook"/>

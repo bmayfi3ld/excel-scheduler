@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Add
 
 - data validation from the AllCohorts rule
+- the FindClassCohortIsIn function
 
 ## v0.0.1
 
@@ -17,5 +18,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - the AllCohorts rule, and docs
 - the ClassRequiresTravel rule, and docs
-- the FindClassCohortIsIn function (todo)
 - initial website
