@@ -4,15 +4,15 @@ weight = 30
 +++
 # Scheduler Rules
 
-There are a number of rules you can use, they are listed here along with how
-to configure them on the `Rules` sheet. When a rule has been broken the cell
-will be highlighted `Red` and a comment will note the infraction reasons.
+Rules help validate your schedule and are located on the `Rules` sheet. When you break a rule, the relevant cell
+will be highlighted in `Red` with a comment explaining the issue.
 
-Rules are added by adding the rule name to the first row of the `Rules` sheet.
-Each column will specifcy a new rule along with its options in the cell under
-the name.
+## Adding Rules
 
-eg:
+Add rules by putting the rule name in the first row of the Rules sheet. Each
+column represents a new rule with its options listed below the name.
+
+Example:
 
 | AllCohorts | ClassRequiresTravel | *More Rules...* |
 | ---------- | ------------------- | --------------- |
@@ -23,22 +23,25 @@ eg:
 |            |                     |                 |
 |            | 3rd                 |                 |
 
+**Two Important Notes:**
+- Rules must be named exactly as they are in the documentation.
+- Names of classes and cohorts must be consistent.
 
-Often when you are configuring a rules in a single column, the rule with use `breaks`
-to space out the different options. A break is just an empty cell. Notice above
-ther is a `break` between `Latin` and `1st`.
+When configuring rules, empty cells will be used as `breaks` to separate different
+options. Notice the `break` (empty cell) between Latin and 1st above.
 
-## AllCohorts
-Require each cohort on the schedule to be a valid cohort from this AllCohorts list.
+## Available Rules Reference
 
-eg: If you put 53rd into the schedule and that isn't in the list, it will be
-marked.
+### AllCohorts
+This rule ensures that every cohort in your schedule matches an entry in your
+valid cohort list. For example, if you enter "53rd" in the schedule but it's
+not in your list, it will be marked as an error.
 
 **Configuration**:
 
-Just a list of all possible cohorts.
+List all possible cohorts.
 
-eg:
+Example:
 
 
 | AllClasses |
@@ -48,37 +51,28 @@ eg:
 | 3rd        |
 
 
-## ClassRequiresTravel
+### ClassRequiresTravel
 
-Certain cohorts can not have certain classes sequentially. This could be due to setup
-and teardown requirements or if a teacher has to physically travel to the cohort
-and they are far apart.
+This rule prevents certain cohorts from having specific classes back-to-back.
 
-eg: If there is a class called `Lunch Cart` or maybe `Latin Cart` or `Homeroom Art`
-where the class physically travels to the homeroom of the cohort to teach the
-class. The class cannot be taught to certain cohorts sequentially if they are in different
-buildings.
+Use it when:
+- Classes need setup or teardown time
+- Teachers must travel between cohorts
+- Mobile classes (like "Lunch Cart" or "Latin Cart") move between different buildings
 
 **Configuration**:
 
-A repeating pattern of `Class Name`, `break`, `all cohorts that located near
-each other`, `break`, `another group of cohorts located near each other` and then
-the pattern of `group of cohorts` `break` can continue for as many groups as you
-want to setup for this class (perhaps you have 4 buildings, then you could have 4 groups).
+Follow this pattern:
 
-Then add a `double break` and you can add another class.
+1. Class Name
+2. Break (empty cell)
+3. Group of cohorts located near each other, each in its own cell
+4. Break
+5. Another group of colocated cohorts
+6. Continue with breaks and cohort groups as needed
+7. Double break before starting a new class
 
-eg:
-
-Here we have two classes that need travel spacing `Latin Cart` which will be a
-cart that has to physcially travel to the homeroom of the classes and `Lunch Cart`
-which also has to travel. You will notice the double break between the two classes.
-
-We can notice that it looks like 1st, 2nd, 3rd are in the same building as well as
-4th, 5th, 6th in one and 7th, 8th, 9th in  another.
-
-7th, 8th, 9th do not take the "Latin Cart" class in this example, so they are
-not included in the latin cart options.
+Example:
 
 | AllClasses |
 | ---------- |
@@ -107,8 +101,19 @@ not included in the latin cart options.
 | 8th        |
 | 9th        |
 
+Here we have two classes that need to travel to each cohorts homeroom `Latin Cart`
+ and `Lunch Cart`.
 
-So here we would get one error if the schedule looked like this.
+This example shows:
+- 1st, 2nd, 3rd are in the same building
+- 4th, 5th, 6th are in another
+- and 7th, 8th, 9th in yet another
+
+7th, 8th, 9th do not take the `Latin Cart` class in this example, so they are
+not included in the latin cart options.
+
+
+Here is an example schedule that would give one error:
 
 
 |            | Monday, 9am | Monday, 10am | Monday, 11am | Monday, 12pm | ... |
@@ -119,5 +124,5 @@ So here we would get one error if the schedule looked like this.
 We get an error for `Latin Cart` at `Monday, 10am` because the cart cannot travel
 from wherever 1st is located to wherever 4th is located in the transition time.
 
-We do not get an error for the lunch cart because 1st and 2nd homeroom are close
-enough to each other.
+We do not get an error for the `Lunch Cart` because 1st and 2nd homeroom are
+located close to each other.

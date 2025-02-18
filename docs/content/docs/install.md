@@ -4,11 +4,10 @@ weight = 10
 +++
 # Install The App
 
-Currently there is only a developer release, so you will have to install it
-"manually" from the manifest file. (Said another way, it is not in the excel
-app store).
+Currently, there is only a developer release available, so you will need to
+install it using the manifest file and not from the Excel App Store.
 
-- Download the latest app manifest file.
+**Download the Manifest File**
 
 1. Click the below button to download `manifest.xml` to your computer.
 
@@ -16,9 +15,9 @@ app store).
 Download Manifest
 {{< /download-button >}}
 
-- Install that manifest into your excel
+**Install the Manifest in Excel**
 
-1. Open your workbook (any file that you want to use)
+1. Open the workbook where you want to use the app
 2. Click on `Add-ins`
 
 ![add-in button](/add_ins_bar.png)
@@ -31,13 +30,13 @@ Download Manifest
 
 ![my add-ins](/my_add_ins.png)
 
-1. Click `Upload My Add-in`
+5. Click `Upload My Add-in`
 
-2. Browse for the manifest file downloaded above.
+6. Browse for the manifest file downloaded above.
 
-3. Click Upload.
+7. Click Upload.
 
 
-For the same instructions but written by microsoft, see this link.
+For Microsoft's official installation instructions, visit:
 
 https://learn.microsoft.com/en-us/office/dev/add-ins/testing/sideload-office-add-ins-for-testing#manually-sideload-an-add-in-to-office-on-the-web

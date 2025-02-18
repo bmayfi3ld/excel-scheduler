@@ -3,9 +3,9 @@ title = 'Introduction'
 +++
 # Introduction
 
-A lightweight excel app that helps you schedule basic school (or anything with
-cohorts of people) activities. Uses a configurable list of rules to let you know
-if the schedule if accurate.
+A lightweight Excel app that helps you schedule basic school (or any other
+group-based) activities. It uses a configurable list of rules to let you know if
+your schedule is accurate.
 
 
 ![schedule sheet overview](/schedule_sheet.png)
@@ -13,33 +13,33 @@ if the schedule if accurate.
 
 ## Using Rules
 
-On the `Rules` sheet you can setup all the various restrictions you want to apply
-to your schedule.
+On the `Rules` sheet, you can set up various restrictions you want to apply to
+your schedule.
 
 ![rules sheet overview](/rules_sheet.png)
 
-That way as your updating the schedule it will warn you if you have broken one
-of your rules.
+
+As you update the schedule, it will warn you if you have broken any of your rules.
 
 
 ## Getting Started
 
-- Installation instructions on how to install the app in your excel.
+Find installation instructions for adding the app to Excel here.
 
-[Installation Instructions]({{< ref "install" >}})
+- [Installation Instructions]({{< ref "install" >}})
 
-- After that you will want to get setup with a new workbook.
+Next, learn how to set up a new workbook:
 
-[Setup A New Workbook]({{< ref "setup" >}})
+- [Setup A New Workbook]({{< ref "setup" >}})
 
-- Then if you want to add more rules, you can check out the rules reference
+To add more rules, check out the rules reference:
 
-[Scheduler Rules]({{< ref "rules" >}})
+- [Scheduler Rules]({{< ref "rules" >}})
 
 
 ## Questions?
 
-Issues can be sent to the Github Issue Tracker
+Issues, Comments, or Requests can be sent to the Github Issue Tracker
 
 https://github.com/bmayfi3ld/excel-scheduler/issues
 
