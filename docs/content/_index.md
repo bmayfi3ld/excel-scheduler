@@ -3,7 +3,7 @@ title = 'Introduction'
 +++
 # Introduction
 
-A lightweight Excel app that helps you schedule basic school (or any other
+An open source Excel app that helps you schedule basic school (or any other
 group-based) activities. It uses a configurable list of rules to let you know if
 your schedule is accurate.
 

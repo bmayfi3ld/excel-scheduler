@@ -37,6 +37,6 @@ Download Manifest
 7. Click Upload.
 
 
-For Microsoft's official installation instructions, visit:
+**For Microsoft's official installation instructions, visit:**
 
 https://learn.microsoft.com/en-us/office/dev/add-ins/testing/sideload-office-add-ins-for-testing#manually-sideload-an-add-in-to-office-on-the-web

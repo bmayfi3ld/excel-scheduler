@@ -7,11 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Roadmap
 
-## Add
+### Add
 
 - data validation from the AllCohorts rule
-- the FindClassCohortIsIn function
-- make the panel smaller
+- move the schedule to the second row of the schedule page
+
+## v0.2.0 - 2025.02.22
+
+### Add
+- the FindCohortClass function, and docs
+
+### Changed
+- made the panel contents smaller, added version
+
 
 ## v0.1.0 - 2025.02.16
 
