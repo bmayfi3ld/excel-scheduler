@@ -49,4 +49,13 @@ just docs-dev
 
 Files are in the docs folder, content for the pages are in docs/content.
 
+### Release
+
+Make sure the `changelog.md` is updated with the correct release date and
+version number.
+
+Then update the version number in `addin/src/taskpane/taskpane.html`.
+
+After everything is merged into main, the pipeline will build and run.
+
 
