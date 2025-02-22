@@ -15,7 +15,7 @@ any group of students or individuals that would want to participate in a class
 at a time.
 
 Important requirements:
-- Timeslots must be in the format Day, Period for the `FindCohortClass` [In Development] function to work
+- Timeslots must be in the format "Day, Period" for the `FINDCOHORTCLASS` function to work
 - The sheet must be named `Schedule`
 
 Example:
@@ -59,6 +59,41 @@ For a complete list of available rules, see the [Scheduler Rules]({{< ref "rules
 
 ## Other Sheets
 
-[In Development]
-There are functions that will help setup additional sheets that can be used
-as views, to provide more friendly ways to read the schedule.
+There are functions that will help set up additional sheets that can be used
+as views, providing more user-friendly ways to read the schedule.
+
+### Cohort Schedule
+
+To view a schedule for a single cohort in a more traditional calendar format,
+the FINDCOHORTCLASS function can be used. This sheet can be customized in any
+way needed, but here is an example of how it might be set up.
+
+| Search | PKA            |                |                |                |                |
+| ------ | -------------- | -------------- | -------------- | -------------- | -------------- |
+|        |                |                |                |                |                |
+|        | Monday         | Tuesday        | Wednesday      | Thursday       | Friday         |
+| 8am    | Gym            | PK3 Room       | No Class | No Class | No Class |
+| 9am    | PK3 Room       | Music          | No Class | No Class | No Class |
+| 10am   | No Class | No Class | No Class | PE             | No Class |
+| 11am   | No Class | No Class | No Class | No Class | No Class |
+| 12pm   | Outside Lunch  | No Class | No Class | No Class | No Class |
+| 1pm    | No Class | No Class | Art            | No Class | No Class |
+| 2pm    | No Class | No Class | No Class | No Class | No Class |
+| 3pm    | No Class | No Class | No Class | No Class | No Class |
+
+With this setup, if you change the value in the cell next to "Search," it will
+update the page with the latest schedule for the selected cohort. If data
+validation is set up for that cell using the values from the "AllCohorts" rule,
+there will be a dropdown menu that lets you select the desired cohort.
+
+The formula =CLASSSCHEDULER.FINDCOHORTCLASS($B$1,B$3,$A4) is used in each schedule cell to look up the class.
+
+It references three pieces of information:
+
+- The cohort name from cell B1 (which stays constant for all lookups)
+- The day of the week from row 3 (which remains the same for each column)
+- and the time from column A (which stays the same for each row).
+
+The dollar signs ($) in the formula lock specific cell references so they don't change when you copy the formula across the schedule grid. This single formula can be copied to all cells in the schedule, and it will automatically adjust to show the correct class for each time slot and day.
+
+For more details on how to use the provided functions, see the [Functions]({{< ref "functions" >}}) page.
