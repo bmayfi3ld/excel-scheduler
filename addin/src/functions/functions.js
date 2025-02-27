@@ -1,42 +1,37 @@
-/* global Excel */
-
 /**
  * Find the class that a cohort is in given a day and time.
  * @customfunction
  * @param {string} cohort The cohort to search for
  * @param {string} day The day of the week
  * @param {string} timeslot The timeslot
+ * @param {string[][]} schedule The entire schedule table range
  * @returns {string} The class the cohort is in.
  */
-async function FindCohortClass(cohort, day, timeslot) {
-  // console.log("find cohort")
+function FindCohortClass(cohort, day, timeslot, schedule) {
   try {
-    return await Excel.run(async (context) => {
-      const sheet = context.workbook.worksheets.getItem("Schedule");
-      const range = sheet.getUsedRange();
-      range.load("values");
-      await context.sync();
+    // Format the column header we're looking for
+    const headerToFind = `${day}, ${timeslot}`;
 
-      const values = range.values;
-      const headerRow = values[0];
+    // First row contains headers
+    const headerRow = schedule[0];
 
-      // Find column with matching day,timeslot
-      const columnIndex = headerRow.findIndex(
-        header => header === `${day}, ${timeslot}`
-      );
+    // Find the column index with the matching day/timeslot header
+    const columnIndex = headerRow.findIndex(header => header === headerToFind);
+    if (columnIndex === -1) return "error: time or day not found";
 
-      if (columnIndex === -1) return "Time not found";
+    // Search each row for the cohort in the target column
+    for (let i = 1; i < schedule.length; i++) {
+      const rowData = schedule[i];
 
-      // Find row with matching cohort name
-      for (let i = 1; i < values.length; i++) {
-        // console.log(`checking ${values[i][0]} for ${cohort}, from column ${columnIndex}`)
-        if (values[i][columnIndex] === cohort) {
-          return values[i][0];
-        }
+      // If this row has the cohort in the target column
+      if (rowData[columnIndex] === cohort) {
+        // Return the class name (from the first column)
+        return rowData[0];
       }
+    }
 
-      return "No Class";
-    });
+    // If cohort wasn't found in that timeslot
+    return "-";
   } catch (error) {
     return "Error: " + error.message;
   }

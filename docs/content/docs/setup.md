@@ -66,34 +66,61 @@ as views, providing more user-friendly ways to read the schedule.
 
 To view a schedule for a single cohort in a more traditional calendar format,
 the FINDCOHORTCLASS function can be used. This sheet can be customized in any
-way needed, but here is an example of how it might be set up.
+way needed, but here is an example of what the final result might look like:
 
 | Search | PKA            |                |                |                |                |
 | ------ | -------------- | -------------- | -------------- | -------------- | -------------- |
 |        |                |                |                |                |                |
 |        | Monday         | Tuesday        | Wednesday      | Thursday       | Friday         |
-| 8am    | Gym            | PK3 Room       | No Class | No Class | No Class |
-| 9am    | PK3 Room       | Music          | No Class | No Class | No Class |
-| 10am   | No Class | No Class | No Class | PE             | No Class |
-| 11am   | No Class | No Class | No Class | No Class | No Class |
-| 12pm   | Outside Lunch  | No Class | No Class | No Class | No Class |
-| 1pm    | No Class | No Class | Art            | No Class | No Class |
-| 2pm    | No Class | No Class | No Class | No Class | No Class |
-| 3pm    | No Class | No Class | No Class | No Class | No Class |
+| 8am    | Gym            | PK3 Room       | -              | -              | -              |
+| 9am    | PK3 Room       | Music          | -              | -              | -              |
+| 10am   | -              | -              | -              | PE             | -              |
+| 11am   | -              | -              | -              | -              | -              |
+| 12pm   | Outside Lunch  | -              | -              | -              | -              |
+| 1pm    | -              | -              | Art            | -              | -              |
+| 2pm    | -              | -              | -              | -              | -              |
+| 3pm    | -              | -              | -              | -              | -              |
+
+The cells that show "-" indicate no class is scheduled for that cohort at that time.
+
+To create this view, you would use the FINDCOHORTCLASS function in a formula like this in each cell of the schedule grid:
+
+| Search | PKA            |                |                |                |                |
+| ------ | -------------- | -------------- | -------------- | -------------- | -------------- |
+|        |                |                |                |                |                |
+|        | Monday         | Tuesday        | Wednesday      | Thursday       | Friday         |
+| 8am    | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,B$3,$A4,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,C$3,$A4,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,D$3,$A4,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,E$3,$A4,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,F$3,$A4,Schedule!$A$1:$Z$50) |
+| 9am    | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,B$3,$A5,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,C$3,$A5,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,D$3,$A5,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,E$3,$A5,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,F$3,$A5,Schedule!$A$1:$Z$50) |
+| 10am   | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,B$3,$A6,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,C$3,$A6,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,D$3,$A6,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,E$3,$A6,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,F$3,$A6,Schedule!$A$1:$Z$50) |
+| 11am   | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,B$3,$A7,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,C$3,$A7,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,D$3,$A7,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,E$3,$A7,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,F$3,$A7,Schedule!$A$1:$Z$50) |
+| 12pm   | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,B$3,$A8,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,C$3,$A8,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,D$3,$A8,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,E$3,$A8,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,F$3,$A8,Schedule!$A$1:$Z$50) |
+| 1pm    | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,B$3,$A9,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,C$3,$A9,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,D$3,$A9,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,E$3,$A9,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,F$3,$A9,Schedule!$A$1:$Z$50) |
+| 2pm    | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,B$3,$A10,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,C$3,$A10,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,D$3,$A10,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,E$3,$A10,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,F$3,$A10,Schedule!$A$1:$Z$50) |
+| 3pm    | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,B$3,$A11,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,C$3,$A11,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,D$3,$A11,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,E$3,$A11,Schedule!$A$1:$Z$50) | =EXCELSCHEDULER.FINDCOHORTCLASS($B$1,F$3,$A11,Schedule!$A$1:$Z$50) |
 
 With this setup, if you change the value in the cell next to "Search," it will
-update the page with the latest schedule for the selected cohort. If data
-validation is set up for that cell using the values from the "AllCohorts" rule,
-there will be a dropdown menu that lets you select the desired cohort.
+update the page with the latest schedule for the selected cohort.
 
-The formula =CLASSSCHEDULER.FINDCOHORTCLASS($B$1,B$3,$A4) is used in each schedule cell to look up the class.
+To make selecting cohorts easier, you can set up Excel's data validation on the cell next to "Search" (cell B1 in this example):
 
-It references three pieces of information:
+1. Select cell B1
+2. Go to Data → Data Validation
+3. Choose "List" as the validation criteria
+4. For the source, reference the range containing your cohort names from the "AllCohorts" rule
+   (for example, =Rules!A2:A20)
+5. Click OK
+
+This will create a convenient dropdown menu in cell B1, allowing you to select from any of your defined cohorts. When you select a different cohort from this dropdown, all the formulas on the sheet will automatically update to show that cohort's schedule.
+
+The FINDCOHORTCLASS function used in each cell references four pieces of information:
 
 - The cohort name from cell B1 (which stays constant for all lookups)
 - The day of the week from row 3 (which remains the same for each column)
-- and the time from column A (which stays the same for each row).
+- The time from column A (which stays the same for each row)
+- The schedule range that includes all necessary data (the entire Schedule sheet in this example)
 
 The dollar signs ($) in the formula lock specific cell references so they don't change when you copy the formula across the schedule grid. This single formula can be copied to all cells in the schedule, and it will automatically adjust to show the correct class for each time slot and day.
+
+**Important Note:** Make sure to include the full Schedule range as the fourth parameter. The range should include the header row with day/time labels and all rows with class information.
 
 For more details on how to use the provided functions, see the [Functions]({{< ref "functions" >}}) page.

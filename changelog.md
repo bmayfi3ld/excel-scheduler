@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - data validation from the AllCohorts rule
 - move the schedule to the second row of the schedule page
 
+## v0.2.1 - 2025.02.26
+
+### Changed
+- made the findcohort function show "-" when there is no class found
+
+### Fixed
+- included the schedule range in the FINDCOHORTCLASS function to allow for proper updating
+
 ## v0.2.0 - 2025.02.22
 
 ### Add
