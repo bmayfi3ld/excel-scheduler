@@ -70,6 +70,17 @@ export async function run() {
         "For a given class the following groups of cohorts cannot take the class sequentially, due to travel or other time restrictions.",
         rulesRange
       );
+      
+      const cohortBlacklistConfig = await getValuesFromSheet(context, "CohortBlacklist", rulesRange);
+      const cohortBlacklistParsed = splitArrayByEmptyStrings(cohortBlacklistConfig.values);
+      console.log("cohortBlacklistConfig:", cohortBlacklistParsed);
+      addValidationToColumn(
+        context,
+        "CohortBlacklist",
+        "CohortBlacklist",
+        "Defines time slots when specific cohorts are not allowed to have any classes (e.g., lunch periods, breaks).",
+        rulesRange
+      );
 
       // Iterate through each cell, starting from row 2 (skip header) and column 2 (skip first column)
       for (let row = 1; row < scheduleRange.rowCount; row++) {
@@ -138,6 +149,41 @@ export async function run() {
                 if (i !== foundClassBuilding && classTravelConfig[i].includes(priorCellValue)) {
                   brokenRules.push(
                     `The class '${className}' can't go to one cohort '${cellValue}' if the previous one was '${priorCellValue}', it is too far away (or requires setup) see column '${classRequiresTravelConfig.column}' on the Rules sheet`
+                  );
+                  break;
+                }
+              }
+            }
+          });
+          
+          // Check CohortBlacklist
+          cohortBlacklistParsed.forEach((blacklistConfig) => {
+            // individual blacklistConfig pattern:
+            // 0: cohort name
+            // 1: list of blacklisted timeslots
+            
+            if (blacklistConfig.length < 2) {
+              console.log("Skipping blacklist config, not enough parameters");
+              return;
+            }
+            
+            const cohortName = blacklistConfig[0][0];
+            
+            // If this cell isn't for the cohort in this rule, skip
+            if (cellValue !== cohortName) {
+              return;
+            }
+            
+            // Get current timeslot from header
+            const headerRow = scheduleRange.values[0];
+            const timeslot = headerRow[col];
+            
+            // Check if this timeslot is blacklisted for this cohort
+            for (let i = 1; i < blacklistConfig.length; i++) {
+              for (let j = 0; j < blacklistConfig[i].length; j++) {
+                if (blacklistConfig[i][j] === timeslot) {
+                  brokenRules.push(
+                    `The cohort '${cohortName}' is not allowed to have any class during '${timeslot}' as defined in the CohortBlacklist rule. See column '${cohortBlacklistConfig.column}' on the Rules sheet.`
                   );
                   break;
                 }

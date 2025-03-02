@@ -32,6 +32,31 @@ or when using cells as reference (see [Setup]({{< ref "setup" >}})) for an examp
 
 This will return "Gym" if PKA has gym class scheduled on Monday at 8am.
 
+## FINDCLASSCOHORT
+
+The `FINDCLASSCOHORT` function is the reverse of `FINDCOHORTCLASS`. It searches for the cohort that is in a given class on a specific day and time.
+
+**Parameters**
+- className: The name of the class you want to look up (e.g., "Gym", "Art", "Music")
+- day: The day of the week (Monday, Tuesday, Wednesday, Thursday, or Friday)
+- timeslot: The time of day (e.g., "8am", "9am", "2pm")
+- schedule: The range containing the schedule data
+  - Must include the header row with day/time labels and the first column with the class names
+
+**Return Value**
+Returns the first cohort scheduled for the specified class at the given day and time. If no cohort is scheduled, returns "-".
+
+**Example**
+```
+=CLASSSCHEDULER.FINDCLASSCOHORT("Gym", "Monday", "8am", Schedule!$A$1:$Z$50)
+```
+or when using cells as reference:
+```
+=CLASSSCHEDULER.FINDCLASSCOHORT($B$1,B$3,$A4,Schedule!A1:E5)
+```
+
+This will return "PKA" if the PKA cohort has gym class scheduled on Monday at 8am.
+
 ## Tips
 
 - Make sure the cohort names and time periods match exactly what's in the master schedule
@@ -43,7 +68,7 @@ This will return "Gym" if PKA has gym class scheduled on Monday at 8am.
 
 If you get an error, check that:
 
-- The cohort name exists in the master schedule
+- The cohort name or class name exists in the master schedule
 - The day is spelled correctly
 - The time format matches the expected format
 - All four parameters are provided

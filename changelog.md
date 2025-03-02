@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - data validation from the AllCohorts rule
 - move the schedule to the second row of the schedule page
 
+## v0.3.0 - 2025.03.02
+
+### Add
+- FINDCLASSCOHORT function and docs
+- CohortBlacklist rule and docs
+
 ## v0.2.1 - 2025.02.26
 
 ### Changed

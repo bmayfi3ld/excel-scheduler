@@ -36,3 +36,49 @@ function FindCohortClass(cohort, day, timeslot, schedule) {
     return "Error: " + error.message;
   }
 }
+
+/**
+ * Find the first cohort that is in a given class for a specific day and time.
+ * @customfunction
+ * @param {string} className The class name to search for
+ * @param {string} day The day of the week
+ * @param {string} timeslot The timeslot
+ * @param {string[][]} schedule The entire schedule table range
+ * @returns {string} The first cohort found in the class, or "-" if none found.
+ */
+function FindClassCohort(className, day, timeslot, schedule) {
+  try {
+    // Format the column header we're looking for
+    const headerToFind = `${day}, ${timeslot}`;
+
+    // First row contains headers
+    const headerRow = schedule[0];
+
+    // Find the column index with the matching day/timeslot header
+    const columnIndex = headerRow.findIndex(header => header === headerToFind);
+    if (columnIndex === -1) return "error: time or day not found";
+
+    // Find the row with the matching class name
+    const classRowIndex = schedule.findIndex(row => row[0] === className);
+    if (classRowIndex === -1) return "error: class not found";
+
+    // Get the cohort for this class at the specified time
+    for (let i = 1; i < schedule.length; i++) {
+      // Skip the target class row itself
+      if (i === classRowIndex) continue;
+      
+      // If this row has a cohort in that column
+      const cohort = schedule[i][columnIndex];
+      
+      // Check if the class has the cohort in the specified time
+      if (cohort && schedule[classRowIndex][columnIndex] === cohort) {
+        return cohort;
+      }
+    }
+
+    // If no cohort found
+    return "-";
+  } catch (error) {
+    return "Error: " + error.message;
+  }
+}
