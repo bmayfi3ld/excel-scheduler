@@ -126,3 +126,50 @@ from wherever 1st is located to wherever 4th is located in the transition time.
 
 We do not get an error for the `Lunch Cart` because 1st and 2nd homeroom are
 located close to each other.
+
+### CohortBlacklist
+
+This rule prevents specific cohorts from having any classes during designated time slots. 
+Use it for:
+- Lunch periods
+- Recess/Break times
+- Assembly periods
+- Other times when a cohort should not be scheduled for regular classes
+
+**Configuration**:
+
+Follow this pattern:
+1. Cohort name
+2. Break (empty cell)
+3. Blacklisted time slots, each in its own cell
+4. Break
+5. Break
+6. Next cohort name and its blacklisted time slots
+
+Example:
+
+| CohortBlacklist |
+| --------------- |
+| 1st             |
+|                 |
+| Monday, 11am    |
+| Monday, 12pm    |
+|                 |
+|                 |
+| 2nd             |
+|                 |
+| Monday, 12pm    |
+| Monday, 1pm     |
+|                 |
+|                 |
+| 3rd             |
+|                 |
+| Monday, 1pm     |
+| Monday, 2pm     |
+
+In this example:
+- 1st grade has blacklisted time slots from 11am-12pm on Monday
+- 2nd grade has blacklisted time slots from 12pm-1pm on Monday
+- 3rd grade has blacklisted time slots from 1pm-2pm on Monday
+
+If any class is scheduled for 1st grade during Monday at 11am, an error will be flagged.

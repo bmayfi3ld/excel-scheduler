@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Add
 - FINDCLASSCOHORT function and docs
-- ScheduleBlacklist rule, todo
+- CohortBlacklist rule and docs
 
 ## v0.2.1 - 2025.02.26
 
