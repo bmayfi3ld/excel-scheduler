@@ -60,24 +60,19 @@ function FindClassCohort(className, day, timeslot, schedule) {
 
     // Find the row with the matching class name
     const classRowIndex = schedule.findIndex(row => row[0] === className);
+    // console.log(`class on row ${classRowIndex}`)
     if (classRowIndex === -1) return "error: class not found";
 
-    // Get the cohort for this class at the specified time
-    for (let i = 1; i < schedule.length; i++) {
-      // Skip the target class row itself
-      if (i === classRowIndex) continue;
-      
+
+
       // If this row has a cohort in that column
-      const cohort = schedule[i][columnIndex];
-      
-      // Check if the class has the cohort in the specified time
-      if (cohort && schedule[classRowIndex][columnIndex] === cohort) {
-        return cohort;
-      }
+      const cohort = schedule[classRowIndex][columnIndex];
+
+    if (cohort == "") {
+      return "-";
     }
 
-    // If no cohort found
-    return "-";
+    return cohort;
   } catch (error) {
     return "Error: " + error.message;
   }
