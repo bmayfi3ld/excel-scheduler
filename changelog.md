@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Replaced manual rule check buttons with auto-check toggle switch
 - Added automatic rule validation when data changes in Rules or Schedule sheets
+- Added performance timing for run and clear functions, some basic optimization
 
 ### Fixed
 - Bug where red highlighting would remain on cells after their content was deleted
