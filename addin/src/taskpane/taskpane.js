@@ -4,43 +4,115 @@ Office.onReady((info) => {
   if (info.host === Office.HostType.Excel) {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
-    document.getElementById("run").onclick = run;
-    document.getElementById("clear").onclick = clear;
+
+    // Set up toggle event handler
+    const toggleCheckbox = document.getElementById("auto-check-toggle");
+    toggleCheckbox.addEventListener("change", handleToggleChange);
+
+    // Initialize event handlers for worksheet changes
+    setupWorksheetChangeHandlers();
   }
 });
 
+// Track if auto-check is enabled
+let autoCheckEnabled = false;
+let changeHandler = null;
+
+// Handle toggle change
+function handleToggleChange(event) {
+  autoCheckEnabled = event.target.checked;
+
+  if (autoCheckEnabled) {
+    // If enabled, set up event handlers and run rules check
+    setupWorksheetChangeHandlers();
+    run();
+  } else {
+    // If disabled, remove event handlers and clear rules
+    removeWorksheetChangeHandlers();
+    clear();
+  }
+}
+
+// Set up handlers to watch for changes in the Rules and Schedule sheets
+async function setupWorksheetChangeHandlers() {
+  try {
+    await Excel.run(async (context) => {
+      // Get the Rules and Schedule sheets
+      const rulesSheet = context.workbook.worksheets.getItem("Rules");
+      const scheduleSheet = context.workbook.worksheets.getItem("Schedule");
+
+      // Register the onChange event handler for both sheets
+      rulesSheet.onChanged.add(handleWorksheetChange);
+      scheduleSheet.onChanged.add(handleWorksheetChange);
+
+      await context.sync();
+      console.log("excel-scheduler worksheet change handlers set up successfully");
+    });
+  } catch (error) {
+    console.error("excel-scheduler error setting up worksheet change handlers:", error);
+  }
+}
+
+// Remove the worksheet change handlers
+async function removeWorksheetChangeHandlers() {
+  try {
+    await Excel.run(async (context) => {
+      // Get the Rules and Schedule sheets
+      const rulesSheet = context.workbook.worksheets.getItem("Rules");
+      const scheduleSheet = context.workbook.worksheets.getItem("Schedule");
+
+      // Remove the onChange event handlers
+      rulesSheet.onChanged.remove();
+      scheduleSheet.onChanged.remove();
+
+      await context.sync();
+      console.log("excel-scheduler worksheet change handlers removed successfully");
+    });
+  } catch (error) {
+    console.error("excel-scheduler error removing worksheet change handlers:", error);
+  }
+}
+
+// Handle worksheet changes
+async function handleWorksheetChange(event) {
+  // Only process if auto-check is enabled
+  if (autoCheckEnabled) {
+    console.log("excel-scheduler worksheet changed, running rules check");
+
+    // Debounce the rule check to avoid running it too frequently
+    if (changeHandler) {
+      clearTimeout(changeHandler);
+    }
+
+    // Wait a short delay before running the check to batch multiple changes
+    changeHandler = setTimeout(async () => {
+      await run();
+      changeHandler = null;
+    }, 3000); // 1 second debounce
+  }
+}
+
+
+
 export async function run() {
+  // Start timer
+  const startTime = performance.now();
+
   // Get the icon element
   const icon = document.querySelector(".ms-Icon");
-  console.log("Starting validation script");
+  console.log("excel-scheduler starting validation script");
 
   await clear();
 
   try {
-    // Log icon state
-    console.log("Current icon classes:", icon ? icon.className : "Icon element not found");
-
-    // Change to loading icon if element exists
-    if (icon) {
-      icon.classList.remove("ms-Icon--Ribbon");
-      icon.classList.add("ms-Icon--Sync", "loading");
-      console.log("Updated icon classes:", icon.className);
-    } else {
-      console.warn("Icon element not found");
-    }
-
     await Excel.run(async (context) => {
-      console.log("Starting Excel.run");
+      console.log("excel-scheduler starting rule check");
 
       // Get the Schedule sheet
       const scheduleSheet = context.workbook.worksheets.getItem("Schedule");
-      console.log("Got Schedule sheet");
 
       const scheduleRange = scheduleSheet.getUsedRange();
       scheduleRange.load(["values", "rowCount", "columnCount"]);
-      await context.sync();
-
-      console.log(`Sheet dimensions: ${scheduleRange.rowCount} rows, ${scheduleRange.columnCount} columns`);
 
       // get the rules sheet
       const rulesSheet = context.workbook.worksheets.getItem("Rules");
@@ -49,9 +121,11 @@ export async function run() {
       rulesRange.load("values");
       await context.sync();
 
+      console.log(`excel-scheduler sheet dimensions: ${scheduleRange.rowCount} rows, ${scheduleRange.columnCount} columns`);
+
       // Get Values and Set Note for Rules
       const allCohortsConfig = await getValuesFromSheet(context, "AllCohorts", rulesRange);
-      console.log("allCohortsConfig:", allCohortsConfig);
+      console.log("excel-scheduler allCohortsConfig:", allCohortsConfig);
       addValidationToColumn(
         context,
         "AllCohorts",
@@ -62,7 +136,7 @@ export async function run() {
 
       const classRequiresTravelConfig = await getValuesFromSheet(context, "ClassRequiresTravel", rulesRange);
       const classRequiresTravelParsed = splitArrayByEmptyStrings(classRequiresTravelConfig.values);
-      console.log("classRequiresTravelConfig:", classRequiresTravelParsed);
+      console.log("excel-scheduler classRequiresTravelConfig:", classRequiresTravelParsed);
       addValidationToColumn(
         context,
         "ClassRequiresTravel",
@@ -70,10 +144,10 @@ export async function run() {
         "For a given class the following groups of cohorts cannot take the class sequentially, due to travel or other time restrictions.",
         rulesRange
       );
-      
+
       const cohortBlacklistConfig = await getValuesFromSheet(context, "CohortBlacklist", rulesRange);
       const cohortBlacklistParsed = splitArrayByEmptyStrings(cohortBlacklistConfig.values);
-      console.log("cohortBlacklistConfig:", cohortBlacklistParsed);
+      console.log("excel-scheduler cohortBlacklistConfig:", cohortBlacklistParsed);
       addValidationToColumn(
         context,
         "CohortBlacklist",
@@ -82,32 +156,51 @@ export async function run() {
         rulesRange
       );
 
+      // Check for OneClassAtATime rule
+      let oneClassAtATimeEnabled = false;
+      try {
+        const oneClassAtATimeConfig = await getValuesFromSheet(context, "OneClassAtATime", rulesRange);
+        if (oneClassAtATimeConfig && oneClassAtATimeConfig.values.length > 0) {
+          // This rule is enabled if it exists in the Rules sheet
+          oneClassAtATimeEnabled = true;
+          console.log("excel-scheduler OneClassAtATime rule is enabled");
+
+          addValidationToColumn(
+            context,
+            "OneClassAtATime",
+            "OneClassAtATime",
+            "When enabled, ensures cohorts are not scheduled for multiple classes during the same time slot.",
+            rulesRange
+          );
+        }
+      } catch (error) {
+        console.log("excel-scheduler OneClassAtATime rule not found or invalid", error);
+      }
+
       // Iterate through each cell, starting from row 2 (skip header) and column 2 (skip first column)
       for (let row = 1; row < scheduleRange.rowCount; row++) {
         const className = scheduleRange.values[row][0];
-        console.log(`checking timeslots for class ${className}`);
+        console.log(`excel-scheduler checking timeslots for class ${className}`);
 
         for (let col = 1; col < scheduleRange.columnCount; col++) {
           const cellValue = scheduleRange.values[row][col];
-          console.log(`Checking cell at ${getColumnLetter(col)}${row + 1} :`, {
+          if (!cellValue) {
+            continue;
+          }
+
+          console.log(`excel-scheduler checking cell at ${getColumnLetter(col)}${row + 1} :`, {
             value: cellValue,
             isEmpty: !cellValue,
           });
 
           const priorCellValue = scheduleRange.values[row][col - 1];
-          console.log(`prior class ${priorCellValue}`);
-
-          // Skip empty cells
-          if (!cellValue) {
-            console.log("Skipping empty cell");
-            continue;
-          }
+          console.log(`excel-scheduler prior class ${priorCellValue}`);
 
           let brokenRules = [];
 
           // Check AllCohortsRule
           if (!allCohortsConfig.values.includes(cellValue)) {
-            console.log(`Invalid cohort found: "${cellValue}"`);
+            console.log(`excel-scheduler invalid cohort found: "${cellValue}"`);
 
             brokenRules.push(
               `The cohort '${cellValue}' isn't in the total list of classes, check column '${allCohortsConfig.column}' on the Rules sheet.`
@@ -123,7 +216,7 @@ export async function run() {
             // .... repeat
 
             if (classTravelConfig.length < 3) {
-              console.log("Skipping class config, not enough parameters");
+              console.log("excel-scheduler skipping class config, not enough parameters");
               // need at least the class name and 2 buildings
               return;
             }
@@ -155,29 +248,29 @@ export async function run() {
               }
             }
           });
-          
+
           // Check CohortBlacklist
           cohortBlacklistParsed.forEach((blacklistConfig) => {
             // individual blacklistConfig pattern:
             // 0: cohort name
             // 1: list of blacklisted timeslots
-            
+
             if (blacklistConfig.length < 2) {
-              console.log("Skipping blacklist config, not enough parameters");
+              console.log(`excel-scheduler skipping blacklist config, not enough parameters, got ${blacklistConfig}`);
               return;
             }
-            
+
             const cohortName = blacklistConfig[0][0];
-            
+
             // If this cell isn't for the cohort in this rule, skip
             if (cellValue !== cohortName) {
               return;
             }
-            
+
             // Get current timeslot from header
             const headerRow = scheduleRange.values[0];
             const timeslot = headerRow[col];
-            
+
             // Check if this timeslot is blacklisted for this cohort
             for (let i = 1; i < blacklistConfig.length; i++) {
               for (let j = 0; j < blacklistConfig[i].length; j++) {
@@ -190,6 +283,33 @@ export async function run() {
               }
             }
           });
+
+          // Check OneClassAtATime rule
+          if (oneClassAtATimeEnabled) {
+            // Get current timeslot from header
+            const headerRow = scheduleRange.values[0];
+            const timeslot = headerRow[col];
+            const cohort = cellValue;
+
+            // Check if this cohort is taking any other class in this timeslot
+            for (let otherRow = 1; otherRow < scheduleRange.rowCount; otherRow++) {
+              // Skip the current row (same class)
+              if (otherRow === row) {
+                continue;
+              }
+
+              const otherClassName = scheduleRange.values[otherRow][0];
+              const otherCellValue = scheduleRange.values[otherRow][col];
+
+              // If this cohort is assigned to another class in the same timeslot
+              if (otherCellValue === cohort) {
+                brokenRules.push(
+                  `The cohort '${cohort}' is scheduled for both '${className}' and '${otherClassName}' during '${timeslot}'. Cohorts can only attend one class at a time according to the OneClassAtATime rule.`
+                );
+                break; // One conflict is enough to report the issue
+              }
+            }
+          }
 
           // add errors
           if (brokenRules.length != 0) {
@@ -207,29 +327,25 @@ export async function run() {
                 comment.replies.add(rule);
               });
 
-              console.log("Added comment with replies successfully");
+              console.log("excel-scheduler added comment with infractions successfully");
             } catch (error) {
-              console.error("Error adding comment:", error);
+              console.error("excel-scheduler error adding comment:", error);
             }
           }
         }
       }
 
-      console.log("Completing final context.sync()");
       await context.sync();
-      console.log("Excel operations completed successfully");
     });
   } catch (error) {
-    console.error("Error in validation script:", error);
-  } finally {
-    // Restore original icon
-    if (icon) {
-      icon.classList.remove("ms-Icon--Sync", "loading");
-      icon.classList.add("ms-Icon--Ribbon");
-      console.log("Restored icon to original state:", icon.className);
-    }
-    console.log("Script execution completed");
+    console.error("excel-scheduler error in validation script:", error);
   }
+
+  // Calculate and log execution time
+  const endTime = performance.now();
+  const executionTime = (endTime - startTime).toFixed(2);
+  console.log(`excel-scheduler run function complete, execution time: ${executionTime} ms`);
+
 }
 
 // Helper function to convert column index to letter
@@ -303,8 +419,6 @@ async function addValidationToColumn(context, headerValue, validationTitle, vali
 
     // Get the column index where header was found
     const columnIndex = values[0].indexOf(headerValue);
-
-    console.log("adding validation to row 0 and column " + columnIndex);
     const rulesSheet = context.workbook.worksheets.getItem("Rules");
     const validationRange = rulesSheet.getCell(0, columnIndex);
 
@@ -316,50 +430,26 @@ async function addValidationToColumn(context, headerValue, validationTitle, vali
       showPrompt: true,
       title: validationTitle,
     };
-
-    await context.sync();
   } catch (error) {
     console.error("Error: ", error);
   }
 }
 
 export async function clear() {
+  // Start timer
+  const clearStartTime = performance.now();
+
   try {
     await Excel.run(async (context) => {
-      console.log("Starting Excel.clear");
+      console.log("excel-scheduler clearing formatting");
 
-      // Get the Schedule sheet
       const sheet = context.workbook.worksheets.getItem("Schedule");
-      console.log("Got Schedule sheet");
+      const entireUsedRange = sheet.getUsedRange();
+      entireUsedRange.format.fill.clear();
 
-      // Get the used range of the sheet
-      const usedRange = sheet.getUsedRange();
-      usedRange.load(["values", "rowCount", "columnCount"]);
-      await context.sync();
 
-      console.log(`Sheet dimensions: ${usedRange.rowCount} rows, ${usedRange.columnCount} columns`);
-      console.log("Full range values:", usedRange.values);
 
-      // Iterate through each cell, starting from row 2 (skip header) and column 2 (skip first column)
-      for (let row = 1; row < usedRange.rowCount; row++) {
-        for (let col = 1; col < usedRange.columnCount; col++) {
-          const cellValue = usedRange.values[row][col];
-
-          // Skip empty cells
-          if (!cellValue) {
-            console.log("Skipping empty cell");
-            continue;
-          }
-
-          // Get the specific cell
-          const cell = usedRange.getCell(row, col);
-          console.log("Got cell reference");
-
-          // Set fill color to none, cleaning up
-          cell.format.fill.clear();
-        }
-      }
-
+      // Clear all comments from the sheet
       sheet.load(["comments"]);
       await context.sync();
 
@@ -367,12 +457,15 @@ export async function clear() {
         comment.delete();
       });
 
-      console.log("Completing final context.sync()");
       await context.sync();
-      console.log("Excel operations completed successfully");
     });
+
+    // Calculate and log execution time
+    const clearEndTime = performance.now();
+    const clearExecutionTime = (clearEndTime - clearStartTime).toFixed(2);
+    console.log(`excel-scheduler clear function execution time: ${clearExecutionTime} ms`);
   } catch (error) {
-    console.error("Error in clear script:", error);
+    console.error("excel-scheduler error in clear script:", error);
   }
 }
 

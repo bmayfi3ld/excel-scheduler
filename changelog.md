@@ -12,6 +12,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - data validation from the AllCohorts rule
 - move the schedule to the second row of the schedule page
 
+## v0.4.0 - 2025.03.08
+
+### Added
+- OneClassAtATime rule to prevent cohorts from being scheduled for multiple classes at the same time
+
+### Changed
+- Replaced manual rule check buttons with auto-check toggle switch
+- Added automatic rule validation when data changes in Rules or Schedule sheets
+- Added performance timing for run and clear functions, some basic optimization
+
+### Fixed
+- Bug where red highlighting would remain on cells after their content was deleted
+
 ## v0.3.1 - 2025.03.02
 
 ### Fixed

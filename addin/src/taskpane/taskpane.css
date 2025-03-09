@@ -6,11 +6,6 @@
      padding: 0;
  }
 
- ul {
-     margin: 0;
-     padding: 0;
- }
-
  .ms-welcome__main {
     display: -webkit-flex;
     display: flex;
@@ -26,29 +21,104 @@
  }
 
 
- .ms-welcome__action.ms-Button--hero {
-     margin-top: 10px;
- }
-
-.ms-Button.ms-Button--hero .ms-Button-label {
-  color: #0078d7;
+/* Toggle switch styling */
+.toggle-container {
+    width: 100%;
 }
 
-.ms-Button.ms-Button--hero:hover .ms-Button-label,
-.ms-Button.ms-Button--hero:focus .ms-Button-label{
-  color: #005a9e;
-  cursor: pointer;
+.ms-Toggle {
+    margin-bottom: 10px;
+    position: relative;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-b {
-    font-weight: bold;
+.ms-Toggle-description {
+    display: inline-block;
+    font-weight: 600;
+    margin-bottom: 0;
 }
 
-.loading {
-    animation: spin 1s linear infinite;
+.toggle-control {
+    display: inline-block;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.ms-Toggle-field {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    white-space: nowrap;
+}
+
+.ms-Toggle-slider {
+    background: #919191;
+    border-radius: 10px;
+    cursor: pointer;
+    height: 20px;
+    margin: 0;
+    position: relative;
+    transition: .4s;
+    width: 44px;
+    display: inline-block;
+}
+
+.ms-Toggle-slider:before {
+    background-color: #fff;
+    border-radius: 10px;
+    bottom: 2px;
+    content: "";
+    height: 16px;
+    left: 2px;
+    position: absolute;
+    transition: .4s;
+    width: 16px;
+}
+
+.ms-Toggle-input {
+    display: none;
+}
+
+.ms-Toggle-input:checked + .ms-Toggle-field .ms-Toggle-slider {
+    background-color: #0078d4;
+}
+
+.ms-Toggle-input:checked + .ms-Toggle-field .ms-Toggle-slider:before {
+    transform: translateX(24px);
+}
+
+.ms-Toggle-input:focus + .ms-Toggle-field .ms-Toggle-slider {
+    box-shadow: 0 0 1px #0078d4;
+}
+
+.ms-Label {
+    display: inline-block;
+    margin: 0 5px;
+    font-size: 12px;
+}
+
+.ms-Toggle-field .ms-Label--on {
+    display: none;
+}
+
+.ms-Toggle-field .ms-Label--off {
+    display: inline-block;
+}
+
+.ms-Toggle-input:checked + .ms-Toggle-field .ms-Label--on {
+    display: inline-block;
+}
+
+.ms-Toggle-input:checked + .ms-Toggle-field .ms-Label--off {
+    display: none;
+}
+
+.toggle-description {
+    margin-top: 5px;
+    padding-right: 10px;
+    clear: both;
 }

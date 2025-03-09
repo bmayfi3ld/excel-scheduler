@@ -173,3 +173,28 @@ In this example:
 - 3rd grade has blacklisted time slots from 1pm-2pm on Monday
 
 If any class is scheduled for 1st grade during Monday at 11am, an error will be flagged.
+
+### OneClassAtATime
+
+This rule ensures that a cohort is not scheduled for multiple classes during the same time slot. It helps prevent schedule conflicts where a single cohort would need to be in two places at once.
+
+**Configuration**:
+
+This rule doesn't require any configuration values - simply add the rule name "OneClassAtATime" as a column header in the Rules sheet to enable it.
+
+Example:
+
+| OneClassAtATime |
+| --------------- |
+|                 |
+
+When this rule is enabled, the system will check every time slot and flag any instances where a cohort appears more than once in the same time slot.
+
+For example, this schedule would generate an error:
+
+|            | Monday, 9am |
+| ---------- | ----------- |
+| Math       | 1st         |
+| Art        | 1st         |
+
+The error would flag that 1st grade is scheduled for both Math and Art during Monday at 9am.
