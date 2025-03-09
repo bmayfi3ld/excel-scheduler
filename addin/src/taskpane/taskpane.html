@@ -26,23 +26,25 @@
         </section>
 
         <main id="app-body" class="ms-welcome__main" style="display: none;">
-            <div class="ms-ListItem">
-                <div role="button" id="run" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl">
-                    <i class="ms-Icon ms-Icon--Ribbon ms-font-xl"></i>
-                    <span class="ms-Button-label">Check Rules</span>
+            <div class="ms-ListItem toggle-container" style="margin-top: 20px;">
+                <div class="ms-Toggle">
+                    <span class="ms-Toggle-description">Auto-check Rules</span>
+                    <div class="toggle-control">
+                        <input type="checkbox" id="auto-check-toggle" class="ms-Toggle-input" />
+                        <label for="auto-check-toggle" class="ms-Toggle-field">
+                            <span class="ms-Label ms-Label--off">Off</span>
+                            <span class="ms-Label ms-Label--on">On</span>
+                            <span class="ms-Toggle-slider"></span>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="ms-ListItem">
-                <div role="button" id="clear" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl">
-                    <i class="ms-Icon ms-Icon--Broom ms-font-xl"></i>
-                    <span class="ms-Button-label">Clear Rule Warnings</span>
-                </div>
+                <p class="ms-font-s toggle-description">When enabled, rules will be checked automatically when data changes in Rules or Schedule sheets.</p>
             </div>
         </main>
 
         <footer class="ms-welcome__footer" style="margin-top: auto; padding: 10px; text-align: right;">
             <span class="ms-font-xs" id="version">
-                v0.3.1
+                v0.4.0
             </span>
         </footer>
     </div>

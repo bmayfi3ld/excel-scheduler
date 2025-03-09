@@ -4,10 +4,95 @@ Office.onReady((info) => {
   if (info.host === Office.HostType.Excel) {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
-    document.getElementById("run").onclick = run;
-    document.getElementById("clear").onclick = clear;
+    
+    // Set up toggle event handler
+    const toggleCheckbox = document.getElementById("auto-check-toggle");
+    toggleCheckbox.addEventListener("change", handleToggleChange);
+    
+    // Initialize event handlers for worksheet changes
+    setupWorksheetChangeHandlers();
   }
 });
+
+// Track if auto-check is enabled
+let autoCheckEnabled = false;
+let changeHandler = null;
+
+// Handle toggle change
+function handleToggleChange(event) {
+  autoCheckEnabled = event.target.checked;
+  
+  if (autoCheckEnabled) {
+    // If enabled, set up event handlers and run rules check
+    setupWorksheetChangeHandlers();
+    run();
+  } else {
+    // If disabled, remove event handlers and clear rules
+    removeWorksheetChangeHandlers();
+    clear();
+  }
+}
+
+// Set up handlers to watch for changes in the Rules and Schedule sheets
+async function setupWorksheetChangeHandlers() {
+  try {
+    await Excel.run(async (context) => {
+      // Get the Rules and Schedule sheets
+      const rulesSheet = context.workbook.worksheets.getItem("Rules");
+      const scheduleSheet = context.workbook.worksheets.getItem("Schedule");
+      
+      // Register the onChange event handler for both sheets
+      rulesSheet.onChanged.add(handleWorksheetChange);
+      scheduleSheet.onChanged.add(handleWorksheetChange);
+      
+      await context.sync();
+      console.log("Worksheet change handlers set up successfully");
+    });
+  } catch (error) {
+    console.error("Error setting up worksheet change handlers:", error);
+  }
+}
+
+// Remove the worksheet change handlers
+async function removeWorksheetChangeHandlers() {
+  try {
+    await Excel.run(async (context) => {
+      // Get the Rules and Schedule sheets
+      const rulesSheet = context.workbook.worksheets.getItem("Rules");
+      const scheduleSheet = context.workbook.worksheets.getItem("Schedule");
+      
+      // Remove the onChange event handlers
+      rulesSheet.onChanged.remove();
+      scheduleSheet.onChanged.remove();
+      
+      await context.sync();
+      console.log("Worksheet change handlers removed successfully");
+    });
+  } catch (error) {
+    console.error("Error removing worksheet change handlers:", error);
+  }
+}
+
+// Handle worksheet changes
+async function handleWorksheetChange(event) {
+  // Only process if auto-check is enabled
+  if (autoCheckEnabled) {
+    console.log("Worksheet changed, running rules check");
+    
+    // Debounce the rule check to avoid running it too frequently
+    if (changeHandler) {
+      clearTimeout(changeHandler);
+    }
+    
+    // Wait a short delay before running the check to batch multiple changes
+    changeHandler = setTimeout(async () => {
+      await run();
+      changeHandler = null;
+    }, 1000); // 1 second debounce
+  }
+}
+
+
 
 export async function run() {
   // Get the icon element
@@ -70,7 +155,7 @@ export async function run() {
         "For a given class the following groups of cohorts cannot take the class sequentially, due to travel or other time restrictions.",
         rulesRange
       );
-      
+
       const cohortBlacklistConfig = await getValuesFromSheet(context, "CohortBlacklist", rulesRange);
       const cohortBlacklistParsed = splitArrayByEmptyStrings(cohortBlacklistConfig.values);
       console.log("cohortBlacklistConfig:", cohortBlacklistParsed);
@@ -155,29 +240,29 @@ export async function run() {
               }
             }
           });
-          
+
           // Check CohortBlacklist
           cohortBlacklistParsed.forEach((blacklistConfig) => {
             // individual blacklistConfig pattern:
             // 0: cohort name
             // 1: list of blacklisted timeslots
-            
+
             if (blacklistConfig.length < 2) {
               console.log("Skipping blacklist config, not enough parameters");
               return;
             }
-            
+
             const cohortName = blacklistConfig[0][0];
-            
+
             // If this cell isn't for the cohort in this rule, skip
             if (cellValue !== cohortName) {
               return;
             }
-            
+
             // Get current timeslot from header
             const headerRow = scheduleRange.values[0];
             const timeslot = headerRow[col];
-            
+
             // Check if this timeslot is blacklisted for this cohort
             for (let i = 1; i < blacklistConfig.length; i++) {
               for (let j = 0; j < blacklistConfig[i].length; j++) {
