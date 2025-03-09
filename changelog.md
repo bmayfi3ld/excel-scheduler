@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.4.0 - Unreleased
 
+### Added
+- OneClassAtATime rule to prevent cohorts from being scheduled for multiple classes at the same time
+
 ### Changed
 - Replaced manual rule check buttons with auto-check toggle switch
 - Added automatic rule validation when data changes in Rules or Schedule sheets

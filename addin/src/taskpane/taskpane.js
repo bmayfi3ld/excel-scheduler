@@ -166,6 +166,27 @@ export async function run() {
         "Defines time slots when specific cohorts are not allowed to have any classes (e.g., lunch periods, breaks).",
         rulesRange
       );
+      
+      // Check for OneClassAtATime rule
+      let oneClassAtATimeEnabled = false;
+      try {
+        const oneClassAtATimeConfig = await getValuesFromSheet(context, "OneClassAtATime", rulesRange);
+        if (oneClassAtATimeConfig && oneClassAtATimeConfig.values.length > 0) {
+          // This rule is enabled if it exists in the Rules sheet
+          oneClassAtATimeEnabled = true;
+          console.log("OneClassAtATime rule is enabled");
+          
+          addValidationToColumn(
+            context,
+            "OneClassAtATime",
+            "OneClassAtATime",
+            "When enabled, ensures cohorts are not scheduled for multiple classes during the same time slot.",
+            rulesRange
+          );
+        }
+      } catch (error) {
+        console.log("OneClassAtATime rule not found or invalid", error);
+      }
 
       // Iterate through each cell, starting from row 2 (skip header) and column 2 (skip first column)
       for (let row = 1; row < scheduleRange.rowCount; row++) {
@@ -275,6 +296,33 @@ export async function run() {
               }
             }
           });
+          
+          // Check OneClassAtATime rule
+          if (oneClassAtATimeEnabled) {
+            // Get current timeslot from header
+            const headerRow = scheduleRange.values[0];
+            const timeslot = headerRow[col];
+            const cohort = cellValue;
+            
+            // Check if this cohort is taking any other class in this timeslot
+            for (let otherRow = 1; otherRow < scheduleRange.rowCount; otherRow++) {
+              // Skip the current row (same class)
+              if (otherRow === row) {
+                continue;
+              }
+              
+              const otherClassName = scheduleRange.values[otherRow][0];
+              const otherCellValue = scheduleRange.values[otherRow][col];
+              
+              // If this cohort is assigned to another class in the same timeslot
+              if (otherCellValue === cohort) {
+                brokenRules.push(
+                  `The cohort '${cohort}' is scheduled for both '${className}' and '${otherClassName}' during '${timeslot}'. Cohorts can only attend one class at a time according to the OneClassAtATime rule.`
+                );
+                break; // One conflict is enough to report the issue
+              }
+            }
+          }
 
           // add errors
           if (brokenRules.length != 0) {
