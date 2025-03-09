@@ -465,34 +465,30 @@ export async function clear() {
       const sheet = context.workbook.worksheets.getItem("Schedule");
       console.log("Got Schedule sheet");
 
-      // Get the used range of the sheet
-      const usedRange = sheet.getUsedRange();
-      usedRange.load(["values", "rowCount", "columnCount"]);
+      // Instead of getting just the used range, get the entire data range (including headers)
+      // First, load the sheet's used range to determine its dimensions
+      const entireUsedRange = sheet.getUsedRange();
+      entireUsedRange.load(["rowCount", "columnCount"]);
+      await context.sync();
+      
+      // Now get a range that encompasses all cells that could have been in use
+      // This ensures we clear formatting from cells that had data but now are empty
+      const dataRange = sheet.getRangeByIndexes(0, 0, entireUsedRange.rowCount + 5, entireUsedRange.columnCount + 5);
+      dataRange.load(["rowCount", "columnCount"]);
       await context.sync();
 
-      console.log(`Sheet dimensions: ${usedRange.rowCount} rows, ${usedRange.columnCount} columns`);
-      console.log("Full range values:", usedRange.values);
+      console.log(`Data range dimensions: ${dataRange.rowCount} rows, ${dataRange.columnCount} columns`);
 
-      // Iterate through each cell, starting from row 2 (skip header) and column 2 (skip first column)
-      for (let row = 1; row < usedRange.rowCount; row++) {
-        for (let col = 1; col < usedRange.columnCount; col++) {
-          const cellValue = usedRange.values[row][col];
-
-          // Skip empty cells
-          if (!cellValue) {
-            console.log("Skipping empty cell");
-            continue;
-          }
-
-          // Get the specific cell
-          const cell = usedRange.getCell(row, col);
-          console.log("Got cell reference");
-
-          // Set fill color to none, cleaning up
+      // Clear fill formatting from all cells in the range (except headers and first column)
+      // This ensures we clear formatting even if cells no longer have data
+      for (let row = 1; row < dataRange.rowCount; row++) {
+        for (let col = 1; col < dataRange.columnCount; col++) {
+          const cell = dataRange.getCell(row, col);
           cell.format.fill.clear();
         }
       }
 
+      // Clear all comments from the sheet
       sheet.load(["comments"]);
       await context.sync();
 
