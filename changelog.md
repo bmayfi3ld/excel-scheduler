@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - data validation from the AllCohorts rule
 - move the schedule to the second row of the schedule page
+- real excel app in microsoft store
+- list number of broken rules somewhere
+
+## v0.4.1 - 2025.05.10
+
+### Change
+- upgraded a few packages to address vulnerabilities
+- added some dev docs
 
 ## v0.4.0 - 2025.03.08
 
