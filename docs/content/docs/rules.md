@@ -30,6 +30,12 @@ Example:
 When configuring rules, empty cells will be used as `breaks` to separate different
 options. Notice the `break` (empty cell) between Latin and 1st above.
 
+## Rule Exceptions
+
+Cells (where you put the cohort names normally) that start with any four or
+more repeating characters (eg: #### or **** or "@@@@@ no class") will not be
+checked for any rules. This could be used for blacked out times for certain classes.
+
 ## Available Rules Reference
 
 ### AllCohorts
@@ -129,7 +135,7 @@ located close to each other.
 
 ### CohortBlacklist
 
-This rule prevents specific cohorts from having any classes during designated time slots. 
+This rule prevents specific cohorts from having any classes during designated time slots.
 Use it for:
 - Lunch periods
 - Recess/Break times

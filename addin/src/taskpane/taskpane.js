@@ -92,8 +92,6 @@ async function handleWorksheetChange(event) {
   }
 }
 
-
-
 export async function run() {
   // Start timer
   const startTime = performance.now();
@@ -121,7 +119,9 @@ export async function run() {
       rulesRange.load("values");
       await context.sync();
 
-      console.log(`excel-scheduler sheet dimensions: ${scheduleRange.rowCount} rows, ${scheduleRange.columnCount} columns`);
+      console.log(
+        `excel-scheduler sheet dimensions: ${scheduleRange.rowCount} rows, ${scheduleRange.columnCount} columns`
+      );
 
       // Get Values and Set Note for Rules
       const allCohortsConfig = await getValuesFromSheet(context, "AllCohorts", rulesRange);
@@ -186,6 +186,24 @@ export async function run() {
           const cellValue = scheduleRange.values[row][col];
           if (!cellValue) {
             continue;
+          }
+
+          // Skip rule checking if cell has 4 or more repeating characters in first 4 characters
+          if (cellValue.length >= 4) {
+            const first4Chars = cellValue.substring(0, 4);
+            const firstChar = first4Chars.charAt(0);
+            let repeatingCount = 0;
+
+            for (let i = 0; i < first4Chars.length; i++) {
+              if (first4Chars.charAt(i) === firstChar) {
+                repeatingCount++;
+              }
+            }
+
+            if (repeatingCount >= 4) {
+              console.log(`excel-scheduler skipping rule check for cell with repeating characters: "${cellValue}"`);
+              continue;
+            }
           }
 
           console.log(`excel-scheduler checking cell at ${getColumnLetter(col)}${row + 1} :`, {
@@ -345,7 +363,6 @@ export async function run() {
   const endTime = performance.now();
   const executionTime = (endTime - startTime).toFixed(2);
   console.log(`excel-scheduler run function complete, execution time: ${executionTime} ms`);
-
 }
 
 // Helper function to convert column index to letter
@@ -446,8 +463,6 @@ export async function clear() {
       const sheet = context.workbook.worksheets.getItem("Schedule");
       const entireUsedRange = sheet.getUsedRange();
       entireUsedRange.format.fill.clear();
-
-
 
       // Clear all comments from the sheet
       sheet.load(["comments"]);

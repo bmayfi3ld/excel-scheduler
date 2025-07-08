@@ -31,6 +31,19 @@ afterwards open https://localhost:22234/manifest.xml and trust the cert
 
 Files are in the addin folder
 
+**arch gotcha**
+
+for os's that are secure and don't let you write to `/usr/lib/node_modules`
+
+move the global install location, fish shell example
+
+```bash
+mkdir ~/.npm-global
+set -gx PATH ~/.npm-global/bin $PATH
+source ~/.config/fish/config.fish
+```
+
+
 **Random**
 
 Neat Place to Find Fabric Icon Names https://uifabricicons.azurewebsites.net/
@@ -40,6 +53,7 @@ Neat Place to Find Fabric Icon Names https://uifabricicons.azurewebsites.net/
 **Dependencies**
 
 - Hugo
+- Go
 - just (https://github.com/casey/just)
 
 
