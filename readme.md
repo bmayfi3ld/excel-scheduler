@@ -29,7 +29,7 @@ just addin-dev
 
 afterwards open https://localhost:22234/manifest.xml and trust the cert
 
-Files are in the addin folder
+Files are in the addin folder, add the manifest.xml file to an excel document to install the plugin. 
 
 **arch gotcha**
 
@@ -38,9 +38,17 @@ for os's that are secure and don't let you write to `/usr/lib/node_modules`
 move the global install location, fish shell example
 
 ```bash
+# Create the directory for global packages
 mkdir ~/.npm-global
-set -gx PATH ~/.npm-global/bin $PATH
-source ~/.config/fish/config.fish
+
+# Configure npm to use the new directory
+npm config set prefix '~/.npm-global'
+
+# Add to PATH permanently (fish shell)
+set -U fish_user_paths ~/.npm-global/bin $fish_user_paths
+
+# Or for current session only:
+# set -gx PATH ~/.npm-global/bin $PATH
 ```
 
 

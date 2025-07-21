@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Roadmap
 Nothing right now
 
+## v0.5.1 - 2025.07.21
+### Change
+- upgraded a couple dependecies with cve's 
+
 ## v0.5.0 - 2025.07.07
 
 ### Change
