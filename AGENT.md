@@ -9,6 +9,13 @@
 - Format code with prettier: `cd addin && npm run prettier`
 - Start docs dev server: `just docs-dev` (alternatively: `cd docs && hugo server`)
 
+
+## Organization
+- there is an addin folder with a npm project using office addin Commands
+- there is a docs folder with a hugo project in it
+- to make linting work there is a package.json in the root and one in the addin folder, both need to be updated
+
+
 ## Code Style Guidelines
 - Follow Office Add-in patterns and practices
 - Use Office UI Fabric components for UI elements
