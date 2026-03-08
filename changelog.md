@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Roadmap
 Nothing right now
 
+## v0.5.3 - 2026.03.07
+### Security
+- Fixed high and moderate severity vulnerabilities (CVE-2025-54798, CVE-2025-15284, CVE-2026-23745, CVE-2026-26278, CVE-2025-13465, GHSA-5c6j-r48x-rmvq)
+- Updated copy-webpack-plugin to ^14.0.0
+- Updated office-addin-debugging to ^6.0.4
+
 ## v0.5.2 - 2025.12.07
 ### Change 
 - dependencies updated
