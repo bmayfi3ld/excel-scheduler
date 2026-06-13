@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Roadmap
 Nothing right now
 
+## v0.5.4 - 2026.06.13
+### Security
+- Remediated all open Dependabot alerts across both lockfiles (0 vulnerabilities remaining)
+- Removed unused `office-addin-debugging` dependency, which eliminated the `@microsoft/teamsfx-core` chain responsible for the bulk of the alerts (axios, handlebars, tar, @xmldom/xmldom, fast-xml-parser) along with the orphaned `start`/`stop`/`signin`/`signout` scripts
+- Updated Office Add-in tooling to current majors: office-addin-cli ^2.0.9, office-addin-dev-certs ^2.0.9, office-addin-lint ^3.0.9, office-addin-manifest ^2.1.5, office-addin-prettier-config ^2.0.4, eslint-plugin-office-addins ^4.0.9, custom-functions-metadata-plugin ^2.1.9
+- Added an `overrides` block forcing `uuid` ^11.1.1 for the remaining dev-only copies pinned by office-addin-manifest and webpack-dev-server's sockjs (GHSA-w5hq-g745-h8pq)
+
 ## v0.5.3 - 2026.03.07
 ### Security
 - Fixed high and moderate severity vulnerabilities (CVE-2025-54798, CVE-2025-15284, CVE-2026-23745, CVE-2026-26278, CVE-2025-13465, GHSA-5c6j-r48x-rmvq)
