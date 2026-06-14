@@ -2,3 +2,7 @@ node_modules
 docs/public
 addin/dist
 temp
+
+# Go
+bin/
+*.exe

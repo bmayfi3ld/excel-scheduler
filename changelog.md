@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Roadmap
 Nothing right now
 
+## Unreleased
+### Added
+- golangci-lint configuration (`.golangci.yml`) focused on security (gosec, bodyclose, noctx) and complexity (gocyclo, gocognit, cyclop, funlen, nestif, maintidx)
+- `just validate` target that runs the Go unit tests and golangci-lint, plus `just setup-hooks` to enable the committed git hooks
+- Pre-commit hook (`.githooks/pre-commit`) that runs `just validate` before each commit
+- Claude Code post-edit hook that reminds the agent to run `just validate` after editing `.go` files
+
 ## v0.5.4 - 2026.06.13
 ### Security
 - Remediated all open Dependabot alerts across both lockfiles (0 vulnerabilities remaining)

@@ -1,0 +1,78 @@
+# golangci-lint configuration (v2 schema) for excel-scheduler.
+# Focus: security (gosec & friends) and code complexity. See
+# https://golangci-lint.run for the full reference.
+version: "2"
+
+run:
+  timeout: 5m
+  # Lint test files too — security and complexity issues hide there as well.
+  tests: true
+
+linters:
+  # Start from the curated "standard" set (errcheck, govet, ineffassign,
+  # staticcheck, unused) and layer the security/complexity linters on top.
+  default: standard
+  enable:
+    # --- Security ---
+    - gosec       # inspects source for common security problems
+    - bodyclose   # HTTP response bodies must be closed (resource leaks)
+    - noctx       # HTTP requests should carry a context
+    # --- Complexity ---
+    - gocyclo     # cyclomatic complexity per function
+    - gocognit    # cognitive complexity per function
+    - cyclop      # cyclomatic complexity per function and package average
+    - funlen      # function length
+    - nestif      # deeply nested if statements
+    - maintidx    # maintainability index per function
+
+  settings:
+    gosec:
+      # Report everything; tune down here if a specific rule proves noisy.
+      severity: low
+      confidence: low
+    gocyclo:
+      min-complexity: 15
+    gocognit:
+      min-complexity: 20
+    cyclop:
+      max-complexity: 15
+      package-average: 10.0
+    funlen:
+      lines: 80
+      statements: 50
+    nestif:
+      min-complexity: 4
+    maintidx:
+      under: 20
+
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - std-error-handling
+    paths:
+      # Third-party Go files vendored inside JS dependencies — not ours.
+      - (^|/)node_modules/
+    rules:
+      # Tests may be long and use predictable randomness/credentials; relax the
+      # complexity and security checks that do not add value there.
+      - path: _test\.go
+        linters:
+          - gosec
+          - funlen
+          - gocyclo
+          - gocognit
+          - cyclop
+          - maintidx
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/bmayfi3ld/excel-scheduler
+  exclusions:
+    paths:
+      - (^|/)node_modules/

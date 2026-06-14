@@ -1,0 +1,6 @@
+#!/bin/sh
+# Pre-commit hook: run the project's validation suite (Go unit tests + the
+# golangci-lint security/complexity checks) before allowing a commit.
+#
+# Enabled via `just setup-hooks` (sets git config core.hooksPath .githooks).
+exec just validate
