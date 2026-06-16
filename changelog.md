@@ -9,9 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Nothing right now
 
 ## Unreleased
+### Changed
+- **Breaking CLI change**: the schedule database file is now passed as a named flag (`--db <file.db>`, short `-d`) on every command instead of a positional argument. `copy` uses `--db <src>` for the source and `--out <dst>` for the destination. Update any scripts that call `scheduler <command> <file.db> ...` to use `scheduler <command> --db <file.db> ...` instead.
+- Replaced hand-rolled `flag`-based dispatcher with `github.com/alecthomas/kong` struct-tag declarative CLI, eliminating ~200 lines of per-command boilerplate (`FlagSet` setup, required-flag checks, `needFile`/`openFile`/`withFile` helpers, and the hand-written `usage()`). Kong autogenerates `--help` for all commands.
+
 ### Added
+- `scheduler import` CLI subcommand: reads an `.xlsx` workbook directly (via `github.com/xuri/excelize/v2`) and populates a fresh `.db` schedule — parses the `Schedule` and `Rules` sheets using the same blank-delimiter convention as the legacy add-in, tolerates referential mismatches (e.g. blackout timeslot labels that don't match schedule headers) as warnings rather than aborting, and prints a summary of counts + violations after import
+- `pkg/ingest` package with `ReadWorkbook` (xlsx I/O), `Parse` (pure sheet→struct transform), and `Apply` (store orchestration) — the same `Parse`/`Apply` core can be reused by the Phase 2 MCP server
+- Go SQLite store (`pkg/store`) over the Phase 0 engine: one self-contained schedule per `.db` file (no registry/global state), with an embedded normalized schema, a `Load()` transform back into `engine.Grid`/`engine.Rules`, and shared operation methods (add/remove class·timeslot·cohort, rule config, assign/unassign, validate, report, info) that the Phase 2 MCP server will reuse. Uses the pure-Go `modernc.org/sqlite` driver (no cgo)
+- `scheduler` CLI (`cmd/scheduler`): thin verb-noun wrapper (`scheduler <command> <file.db> [flags]`) over the store — lifecycle (`init`/`info`/`copy`), structure, rules, grid edits, and read/inspect commands with `--json`; `validate` exits non-zero when violations exist
+- `just cli-build` recipe that builds the CLI to `bin/scheduler`
 - golangci-lint configuration (`.golangci.yml`) focused on security (gosec, bodyclose, noctx) and complexity (gocyclo, gocognit, cyclop, funlen, nestif, maintidx)
-- `just validate` target that runs the Go unit tests and golangci-lint, plus `just setup-hooks` to enable the committed git hooks
+- `just validate` target that runs `go test ./...`, `go vet ./...`, `govulncheck ./...`, and `golangci-lint run`, plus `just setup-hooks` to enable the committed git hooks
 - Pre-commit hook (`.githooks/pre-commit`) that runs `just validate` before each commit
 - Claude Code post-edit hook that reminds the agent to run `just validate` after editing `.go` files
 

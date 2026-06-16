@@ -12,9 +12,16 @@ release-build:
 docs-dev:
   cd docs && hugo server
 
+# build the scheduler CLI to ./bin (bin/ is git-ignored)
+cli-build:
+  go build -o bin/scheduler ./cmd/scheduler
+
 # run all unit tests and the linter (Go)
 validate:
   go test ./...
+  go vet ./...
+  @command -v govulncheck >/dev/null 2>&1 || { echo "govulncheck not found — install it: go install golang.org/x/vuln/cmd/govulncheck@latest"; exit 1; }
+  govulncheck ./...
   @command -v golangci-lint >/dev/null 2>&1 || { echo "golangci-lint not found — install it: https://golangci-lint.run/welcome/install/"; exit 1; }
   golangci-lint run
 
