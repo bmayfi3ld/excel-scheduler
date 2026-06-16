@@ -6,3 +6,8 @@ temp
 # Go
 bin/
 *.exe
+
+# Excel and database files
+*.xlsx
+*.xls
+*.db
