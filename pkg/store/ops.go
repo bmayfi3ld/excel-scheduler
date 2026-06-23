@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/bmayfi3ld/excel-scheduler/pkg/engine"
+	"github.com/bmayfi3ld/quilt/pkg/engine"
 )
 
 // This file holds the shared operation surface. Each method returns structured
@@ -18,6 +18,17 @@ type TimeslotInfo struct {
 	Label  string `json:"label"`
 	Day    string `json:"day,omitempty"`
 	Period string `json:"period,omitempty"`
+}
+
+// BoardData is the single authoritative render payload for live views and the
+// Canva export: the full grid, every violation, and the timeslot metadata
+// (real Day/Period buckets) needed to lay out a calendar without index math.
+// It is pure composition of Grid()/Validate()/Timeslots() — the engine stays
+// the sole source of truth for whether a schedule is valid.
+type BoardData struct {
+	Grid       engine.Grid        `json:"grid"`
+	Violations []engine.Violation `json:"violations"`
+	Timeslots  []TimeslotInfo     `json:"timeslots"`
 }
 
 // ReportEntry is one placement in a per-cohort calendar.
@@ -231,6 +242,25 @@ func (s *Store) Validate() ([]engine.Violation, error) {
 		return nil, err
 	}
 	return engine.Validate(g, r), nil
+}
+
+// Board returns the authoritative render payload: the grid, every violation,
+// and timeslot metadata in one Load. Views render this; they never recompute
+// validity. Re-call Board after any assign/unassign to refresh.
+func (s *Store) Board() (BoardData, error) {
+	g, r, err := s.Load()
+	if err != nil {
+		return BoardData{}, err
+	}
+	violations := engine.Validate(g, r)
+	if violations == nil {
+		violations = []engine.Violation{}
+	}
+	timeslots, err := s.Timeslots()
+	if err != nil {
+		return BoardData{}, err
+	}
+	return BoardData{Grid: g, Violations: violations, Timeslots: timeslots}, nil
 }
 
 // ListUnassigned returns every empty cell (class × timeslot with no assignment).

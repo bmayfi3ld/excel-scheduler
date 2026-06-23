@@ -72,7 +72,7 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - github.com/bmayfi3ld/excel-scheduler
+        - github.com/bmayfi3ld/quilt
   exclusions:
     paths:
       - (^|/)node_modules/

@@ -1,8 +1,15 @@
 +++
-title = 'Install The App'
-weight = 10
+title = 'Install The Excel Add-in (legacy)'
+weight = 30
 +++
-# Install The App
+# Install The Excel Add-in (legacy)
+
+{{< hint warning >}}
+**Deprecated.** The Excel add-in is no longer the recommended way to use Quilt.
+It is kept for existing users, but new schedules should use the
+[Quilt Desktop Plugin]({{< ref "desktop-plugin" >}}) and the `.db`/MCP workflow.
+You can migrate an existing workbook with [`quilt import`]({{< ref "migrate-xlsx" >}}).
+{{< /hint >}}
 
 Currently, there is only a developer release available, so you will need to
 install it using the manifest file and not from the Excel App Store.

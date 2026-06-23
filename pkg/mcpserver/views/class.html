@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Class Schedule",
+  "schemaVersion": 1,
+  "description": "Per-class live view — one class rendered as a Day × Period calendar (a single grid row across the week), showing the cohort in each slot with that row's violations overlaid. Pick a class from the dropdown. Maps directly to a Canva per-class template. Refreshes every 30 seconds or on demand.",
+  "mcpTools": ["mcp__quilt__board"],
+  "mcpServerNames": ["quilt"]
+}
+</script>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Class Schedule</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; background: #fff; color: #1a1a1a; padding: 16px; }
+h1 { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+.subtitle { font-size: 12px; color: #888; margin-bottom: 14px; }
+.toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+select { padding: 5px 10px; border: 0.5px solid #ccc; border-radius: 8px; font-size: 12px; background: #fff; }
+.spacer { flex: 1; }
+.refresh-btn { padding: 5px 12px; border: 0.5px solid #ccc; border-radius: 8px; background: transparent; color: #444; cursor: pointer; font-size: 12px; }
+.refresh-btn:hover { background: #f5f5f5; }
+.status { font-size: 11px; color: #888; }
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; min-width: 100%; }
+th { font-weight: 500; font-size: 11px; color: #666; padding: 6px 10px; border: 0.5px solid #e0e0e0; background: #f8f8f8; white-space: nowrap; text-align: center; }
+th.day-col { text-align: left; min-width: 110px; }
+td { padding: 8px 10px; border: 0.5px solid #e8e8e8; text-align: center; min-width: 80px; font-size: 12px; }
+td.day-name { text-align: left; font-weight: 500; color: #555; white-space: nowrap; }
+td.empty { color: #ccc; }
+td.filled { background: #f0f7e8; color: #2d6a0f; }
+td.invalid { background: #fef0f0; color: #b91c1c; font-weight: 500; }
+td.conflict { background: #fef9ec; color: #92400e; font-weight: 500; }
+td.travel { background: #eef2ff; color: #4338ca; font-weight: 500; }
+td.blackout { background: #f5f0ff; color: #6d28d9; font-weight: 500; }
+.spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid #ddd; border-top-color: #666; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.error-msg { color: #b91c1c; font-size: 12px; padding: 16px 0; }
+</style>
+</head>
+<body>
+<h1>Class Schedule</h1>
+<div class="subtitle" id="subtitle">Loading…</div>
+<div class="toolbar">
+  <label for="classSel" style="font-size:12px;color:#666;">Class</label>
+  <select id="classSel" onchange="render()"></select>
+  <div class="spacer"></div>
+  <span class="status" id="statusMsg"></span>
+  <button class="refresh-btn" onclick="load()">↻ Refresh</button>
+</div>
+<div class="tbl-wrap"><table id="grid"><tr><td style="padding:20px;color:#888">Loading schedule…</td></tr></table></div>
+
+<script>
+const DB = window.QUILT_DB || 'schedule.db';
+
+let board = null;
+let days = [];      // distinct day labels in first-seen order
+let periods = [];   // distinct period labels in first-seen order
+let violationMap = new Map(); // "class|timeslot" -> rule
+
+const RULE_CLASS = {
+  AllCohorts: 'invalid',
+  OneClassAtATime: 'conflict',
+  ClassRequiresTravel: 'travel',
+  CohortBlacklist: 'blackout',
+};
+const RULE_MARK = { invalid: '✕', conflict: '⚠', travel: '⇄', blackout: '⛔' };
+const PRIORITY = ['AllCohorts', 'OneClassAtATime', 'ClassRequiresTravel', 'CohortBlacklist'];
+
+function structured(res) {
+  return res.structuredContent ?? JSON.parse(res.content[0].text);
+}
+
+async function load() {
+  document.getElementById('statusMsg').innerHTML = '<span class="spinner"></span>';
+  try {
+    board = structured(await window.cowork.callMcpTool('mcp__quilt__board', { db: DB }));
+
+    violationMap = new Map();
+    (board.violations || []).forEach(v => {
+      const key = v.Cell.Class + '|' + v.Cell.Timeslot;
+      const prev = violationMap.get(key);
+      if (!prev || PRIORITY.indexOf(v.Rule) < PRIORITY.indexOf(prev)) {
+        violationMap.set(key, v.Rule);
+      }
+    });
+
+    days = []; periods = [];
+    (board.timeslots || []).forEach(t => {
+      const d = t.day || 'Schedule';
+      const p = t.period || t.label;
+      if (!days.includes(d)) days.push(d);
+      if (!periods.includes(p)) periods.push(p);
+    });
+
+    const sel = document.getElementById('classSel');
+    const prev = sel.value;
+    sel.innerHTML = board.grid.Classes.map(c => `<option>${c}</option>`).join('');
+    if (board.grid.Classes.includes(prev)) sel.value = prev;
+
+    document.getElementById('statusMsg').textContent = 'Updated ' + new Date().toLocaleTimeString();
+    render();
+  } catch (e) {
+    document.getElementById('grid').innerHTML = `<tr><td class="error-msg">Error loading schedule: ${e.message}</td></tr>`;
+    document.getElementById('statusMsg').textContent = 'Error';
+  }
+}
+
+// timeslot index for a (day, period) pair, or -1.
+function slotIndex(day, period) {
+  return (board.timeslots || []).findIndex(t =>
+    (t.day || 'Schedule') === day && (t.period || t.label) === period);
+}
+
+function cellClassAndMark(cls, tsLabel, val) {
+  if (!val) return ['empty', ''];
+  const rule = violationMap.get(cls + '|' + tsLabel);
+  if (rule && RULE_CLASS[rule]) {
+    const c = RULE_CLASS[rule];
+    return [c, val + ' ' + RULE_MARK[c]];
+  }
+  return ['filled', val];
+}
+
+function render() {
+  if (!board) return;
+  const cls = document.getElementById('classSel').value;
+  const ci = board.grid.Classes.indexOf(cls);
+  if (ci < 0) return;
+  const { Timeslots, Cells } = board.grid;
+
+  let nFilled = 0;
+  let html = '<thead><tr><th class="day-col">Day</th>' +
+    periods.map(p => `<th>${p}</th>`).join('') + '</tr></thead><tbody>';
+
+  days.forEach(day => {
+    html += `<tr><td class="day-name">${day}</td>`;
+    periods.forEach(p => {
+      const si = slotIndex(day, p);
+      if (si < 0) { html += '<td class="empty"></td>'; return; }
+      const val = Cells[ci][si];
+      if (val) nFilled++;
+      const [tdClass, display] = cellClassAndMark(cls, Timeslots[si], val);
+      html += `<td class="${tdClass}">${display}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('grid').innerHTML = html;
+  document.getElementById('subtitle').textContent =
+    `${cls} · ${nFilled} assigned slot${nFilled !== 1 ? 's' : ''} across ${days.length} day${days.length !== 1 ? 's' : ''}`;
+}
+
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>

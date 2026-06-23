@@ -1,8 +1,8 @@
-// Command scheduler is a thin CLI over pkg/store: it parses flags, calls one
+// Command quilt is a thin CLI over pkg/store: it parses flags, calls one
 // store method, and renders the result. All logic lives in the store so the
 // Phase 2 MCP server can wrap the same methods (CLI command ⇄ MCP tool).
 //
-// Form: scheduler <command> --db <file.db> [flags].
+// Form: quilt <command> --db <file.db> [flags].
 package main
 
 import (
@@ -13,14 +13,19 @@ import (
 
 	"github.com/alecthomas/kong"
 
-	"github.com/bmayfi3ld/excel-scheduler/pkg/store"
+	"github.com/bmayfi3ld/quilt/pkg/store"
 )
 
 // errSilent signals "exit non-zero without printing an error line" — used by
 // validate when violations exist (it has already printed them).
 var errSilent = errors.New("silent failure")
 
+// version is the build version, injected at release time via
+// -ldflags "-X main.version=...". It defaults to "dev" for local builds.
+var version = "dev"
+
 type CLI struct {
+	Version        kong.VersionFlag  `help:"print version and exit"`
 	Init           initCmd           `cmd:"" help:"create an empty schedule"`
 	Info           infoCmd           `cmd:"" help:"name, timestamps, counts, rule status"`
 	Copy           copyCmd           `cmd:"" help:"branch a schedule into a new file"`
@@ -44,6 +49,7 @@ type CLI struct {
 	Validate       validateCmd       `cmd:"" help:"check schedule for violations"`
 	ListUnassigned listUnassignedCmd `cmd:"" help:"list unassigned cells"`
 	Report         reportCmd         `cmd:"" help:"per-cohort calendar"`
+	Mcp            mcpCmd            `cmd:"" help:"run the stdio MCP server"`
 }
 
 // withDB is embedded by every command that opens an existing schedule. Its
@@ -80,10 +86,11 @@ func run(args []string) error {
 	cli := &CLI{}
 	reg := &closeReg{}
 	parser, err := kong.New(cli,
-		kong.Name("scheduler"),
+		kong.Name("quilt"),
 		kong.Description("a self-contained schedule per .db file"),
 		kong.Bind(reg),
 		kong.UsageOnError(),
+		kong.Vars{"version": version},
 	)
 	if err != nil {
 		return err

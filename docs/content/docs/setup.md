@@ -1,11 +1,19 @@
 +++
-title = 'Setup A New Workbook'
-weight = 20
+title = 'Setup A New Workbook (legacy)'
+weight = 35
 +++
-# Setup A New Workbook
+# Setup A New Workbook (legacy)
 
-For a workbook there are only two specific sheets required to use this
-app: `Rules` and `Schedule`.
+{{< hint warning >}}
+**Legacy add-in workflow.** This page describes the Excel workbook layout used by
+the deprecated add-in. With the [Quilt Desktop Plugin]({{< ref "desktop-plugin" >}})
+you instead work with a [`.db` schedule]({{< ref "db-model" >}}) and can
+[import an existing workbook]({{< ref "migrate-xlsx" >}}). The blank-delimiter
+conventions below still describe what `quilt import` expects to read.
+{{< /hint >}}
+
+For a workbook there are only two specific sheets required to use the legacy
+add-in: `Rules` and `Schedule`.
 
 ## Schedule Sheet
 

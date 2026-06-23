@@ -1,0 +1,33 @@
+{
+  "dxt_version": "0.1",
+  "name": "quilt",
+  "display_name": "Quilt",
+  "version": "0.3.0",
+  "description": "Self-contained school schedules: one .db file per schedule, validated by a rules engine, edited and rendered through MCP.",
+  "long_description": "Quilt exposes every schedule operation as an MCP tool over a self-contained SQLite .db file. The server is self-documenting: it ships operating instructions, guide:// resources (the .db model, xlsx migration, the live-views cookbook), view:// HTML skeletons, and workflow prompts (live_view, migrate_xlsx, new_schedule). Build live master and per-class views that render the authoritative `board` payload.",
+  "author": {
+    "name": "Brandon Mayfield"
+  },
+  "icon": "icon.png",
+  "server": {
+    "type": "binary",
+    "entry_point": "quilt",
+    "mcp_config": {
+      "command": "${__dirname}/quilt",
+      "args": ["mcp"]
+    }
+  },
+  "tools": [
+    { "name": "board", "description": "Authoritative render payload: grid + violations + timeslot metadata." },
+    { "name": "import", "description": "Import an .xlsx workbook into a new .db schedule." },
+    { "name": "assign", "description": "Assign a cohort to a (class, timeslot) cell." },
+    { "name": "validate", "description": "Return every rule violation." }
+  ],
+  "prompts": [
+    { "name": "live_view", "description": "Build a self-refreshing live HTML view (master or per-class)." },
+    { "name": "migrate_xlsx", "description": "Import a legacy Excel workbook into a new schedule." },
+    { "name": "new_schedule", "description": "Create and populate a fresh schedule from scratch." }
+  ],
+  "keywords": ["scheduling", "school", "mcp", "sqlite"],
+  "license": "MIT"
+}

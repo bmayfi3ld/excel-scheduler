@@ -1,6 +1,6 @@
 +++
 title = 'Scheduler Rules'
-weight = 30
+weight = 25
 +++
 # Scheduler Rules
 

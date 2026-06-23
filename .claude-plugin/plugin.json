@@ -1,0 +1,15 @@
+{
+  "name": "quilt",
+  "displayName": "Quilt",
+  "version": "0.3.0",
+  "description": "Self-contained school schedules over MCP: one .db file per schedule, a rules engine for validation, and self-documenting tools/resources/prompts.",
+  "author": {
+    "name": "Brandon Mayfield"
+  },
+  "mcpServers": {
+    "quilt": {
+      "command": "quilt",
+      "args": ["mcp"]
+    }
+  }
+}

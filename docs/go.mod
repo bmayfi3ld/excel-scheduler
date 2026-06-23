@@ -1,4 +1,4 @@
-module github.com/bmayfi3ld/excel-scheduler/docs
+module github.com/bmayfi3ld/quilt/docs
 
 go 1.22.2
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/bmayfi3ld/excel-scheduler/pkg/store"
+	"github.com/bmayfi3ld/quilt/pkg/store"
 )
 
 // Warning records a non-fatal import issue (duplicate name, referential miss).

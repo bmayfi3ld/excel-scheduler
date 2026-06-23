@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/bmayfi3ld/excel-scheduler/pkg/engine"
+	"github.com/bmayfi3ld/quilt/pkg/engine"
 )
 
 // newSchedule creates a fresh schedule in a temp dir and registers cleanup.

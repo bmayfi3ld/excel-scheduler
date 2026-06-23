@@ -5,7 +5,7 @@ import (
 	"os"
 	"text/tabwriter"
 
-	"github.com/bmayfi3ld/excel-scheduler/pkg/store"
+	"github.com/bmayfi3ld/quilt/pkg/store"
 )
 
 type gridCmd struct {

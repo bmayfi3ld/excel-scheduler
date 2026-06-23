@@ -1,45 +1,37 @@
 +++
 title = 'Introduction'
 +++
-# Introduction
+# Quilt
 
-An open source Excel app that helps you schedule basic school (or any other
-group-based) activities. It uses a configurable list of rules to let you know if
-your schedule is accurate.
+<img src="/schedule-manager-logo.svg" alt="Quilt logo" width="120" height="120">
 
-
-![schedule sheet overview](/schedule_sheet.png)
-
-
-## Using Rules
-
-On the `Rules` sheet, you can set up various restrictions you want to apply to
-your schedule.
-
-![rules sheet overview](/rules_sheet.png)
-
-
-As you update the schedule, it will warn you if you have broken any of your rules.
-
+**Quilt** helps you build basic school (or any group-based) schedules and checks
+them against a configurable list of rules so you always know whether a schedule
+is valid. Each schedule is **one self-contained `.db` file** — no servers, no
+shared state — and you work with it through Claude using the
+[Quilt Desktop Plugin]({{< ref "desktop-plugin" >}}) and its MCP tools.
 
 ## Getting Started
 
-Find installation instructions for adding the app to Excel here.
+1. Install the [Quilt Desktop Plugin]({{< ref "desktop-plugin" >}}) — the
+   one-click `.dxt` install for Claude Desktop.
+2. Learn [the `.db` model]({{< ref "db-model" >}}): how a schedule is stored and
+   edited.
+3. Already have an Excel workbook? [Migrate it]({{< ref "migrate-xlsx" >}}) with
+   `quilt import`.
+4. Render it: build [Live Views]({{< ref "live-views" >}}) on the `board` tool.
 
-- [Installation Instructions]({{< ref "install" >}})
+For the rule reference, see [Scheduler Rules]({{< ref "rules" >}}). The full tool
+surface is in the [MCP Server]({{< ref "mcp-server" >}}) reference.
 
-Next, learn how to set up a new workbook:
-
-- [Setup A New Workbook]({{< ref "setup" >}})
-
-To add more rules, check out the rules reference:
-
-- [Scheduler Rules]({{< ref "rules" >}})
-
+{{< hint warning >}}
+**Legacy frontend.** Quilt began as an Excel add-in. That add-in still works and
+its [install instructions]({{< ref "install" >}}) remain, but it is deprecated in
+favor of the Desktop plugin and the `.db`/MCP workflow.
+{{< /hint >}}
 
 ## Questions?
 
-Issues, Comments, or Requests can be sent to the Github Issue Tracker
+Issues, comments, or requests can be sent to the GitHub issue tracker:
 
-https://github.com/bmayfi3ld/excel-scheduler/issues
-
+https://github.com/bmayfi3ld/quilt/issues

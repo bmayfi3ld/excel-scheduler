@@ -1,8 +1,15 @@
 +++
-title = 'Functions'
-weight = 40
+title = 'Excel Functions (legacy)'
+weight = 65
 +++
-# Functions
+# Excel Functions (legacy)
+
+{{< hint warning >}}
+**Legacy add-in feature.** These custom spreadsheet functions belong to the
+deprecated Excel add-in. With the [Quilt Desktop Plugin]({{< ref "desktop-plugin" >}})
+you query the schedule through MCP tools (`report`, `board`, `list_*`) instead —
+see the [MCP Server]({{< ref "mcp-server" >}}) reference.
+{{< /hint >}}
 
 Functions provide custom ways to retrieve data from the master schedule, which
 can become large and not user-friendly to navigate directly.

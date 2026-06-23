@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/bmayfi3ld/excel-scheduler/pkg/ingest"
-	"github.com/bmayfi3ld/excel-scheduler/pkg/store"
+	"github.com/bmayfi3ld/quilt/pkg/ingest"
+	"github.com/bmayfi3ld/quilt/pkg/store"
 )
 
 type importCmd struct {

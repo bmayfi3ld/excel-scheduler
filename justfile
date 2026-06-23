@@ -12,9 +12,28 @@ release-build:
 docs-dev:
   cd docs && hugo server
 
-# build the scheduler CLI to ./bin (bin/ is git-ignored)
+# build the quilt CLI to ./bin (bin/ is git-ignored)
 cli-build:
-  go build -o bin/scheduler ./cmd/scheduler
+  go build -o bin/quilt ./cmd/quilt
+
+# build the quilt CLI to ./bin (bin/ is git-ignored)
+cli-install:
+  go install ./cmd/quilt
+
+# local goreleaser dry-run — builds all 6 target archives into ./dist
+release-snapshot:
+  @command -v goreleaser >/dev/null 2>&1 || { echo "goreleaser not found — install it: https://goreleaser.com/install/"; exit 1; }
+  goreleaser release --snapshot --clean
+
+# zip the Claude Desktop Extension (.dxt): binary + docs + views + icon
+dxt: cli-build
+  rm -rf dist/dxt && mkdir -p dist/dxt/docs dist/dxt/live-views
+  cp bin/quilt dist/dxt/quilt
+  cp packaging/dxt/manifest.json packaging/dxt/icon.png packaging/dxt/icon.svg dist/dxt/
+  cp docs/content/docs/*.md dist/dxt/docs/
+  cp packaging/live-views/*.html dist/dxt/live-views/
+  cd dist/dxt && zip -r ../quilt.dxt . >/dev/null
+  @echo "built dist/quilt.dxt"
 
 # run all unit tests and the linter (Go)
 validate:

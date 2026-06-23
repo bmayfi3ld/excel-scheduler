@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/bmayfi3ld/excel-scheduler/pkg/store"
+	"github.com/bmayfi3ld/quilt/pkg/store"
 )
 
 type initCmd struct {
