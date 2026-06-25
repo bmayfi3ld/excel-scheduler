@@ -32,7 +32,7 @@ dxt: cli-build
   cp packaging/dxt/manifest.json packaging/dxt/icon.png packaging/dxt/icon.svg dist/dxt/
   cp docs/content/docs/*.md dist/dxt/docs/
   cp packaging/live-views/*.html dist/dxt/live-views/
-  cd dist/dxt && zip -r ../quilt.dxt . >/dev/null
+  cd dist/dxt && python3 -c "import shutil,os; shutil.make_archive('../quilt','zip','.'); os.replace('../quilt.zip','../quilt.dxt')"
   @echo "built dist/quilt.dxt"
 
 # run all unit tests and the linter (Go)

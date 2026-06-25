@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Master Schedule",
+  "schemaVersion": 1,
+  "description": "Live master schedule grid — classes × timeslots with assigned cohorts. Highlights conflicts and invalid cohort names. Refreshes every 30 seconds or on demand.",
+  "mcpTools": [
+    "mcp__excel-scheduler__grid",
+    "mcp__excel-scheduler__validate"
+  ],
+  "mcpServerNames": [
+    "excel-scheduler",
+    "excel-scheduler"
+  ]
+}
+</script>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Master Schedule</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; background: #fff; color: #1a1a1a; padding: 16px; }
+h1 { font-size: 16px; font-weight: 500; margin-bottom: 4px; color: #1a1a1a; }
+.subtitle { font-size: 12px; color: #888; margin-bottom: 14px; }
+.toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.day-btn { padding: 5px 13px; border: 0.5px solid #ccc; border-radius: 8px; background: transparent; color: #444; cursor: pointer; font-size: 12px; }
+.day-btn.active { background: #e8f0fe; color: #1a5fb4; border-color: #b4c8f0; font-weight: 500; }
+.spacer { flex: 1; }
+.refresh-btn { padding: 5px 12px; border: 0.5px solid #ccc; border-radius: 8px; background: transparent; color: #444; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+.refresh-btn:hover { background: #f5f5f5; }
+.status { font-size: 11px; color: #888; }
+.legend { display: flex; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+.leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #666; }
+.leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; min-width: 100%; }
+th { font-weight: 500; font-size: 11px; color: #666; padding: 6px 8px; border: 0.5px solid #e0e0e0; background: #f8f8f8; white-space: nowrap; text-align: center; }
+th.class-col { text-align: left; min-width: 115px; position: sticky; left: 0; z-index: 2; }
+td { padding: 6px 8px; border: 0.5px solid #e8e8e8; text-align: center; min-width: 72px; font-size: 12px; }
+td.class-name { text-align: left; font-weight: 500; color: #555; position: sticky; left: 0; background: #fff; z-index: 1; white-space: nowrap; font-size: 12px; border-right: 0.5px solid #d0d0d0; }
+td.empty { color: #ccc; }
+td.filled { background: #f0f7e8; color: #2d6a0f; }
+td.invalid { background: #fef0f0; color: #b91c1c; font-weight: 500; }
+td.conflict { background: #fef9ec; color: #92400e; font-weight: 500; }
+.spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid #ddd; border-top-color: #666; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.error-msg { color: #b91c1c; font-size: 12px; padding: 16px 0; }
+</style>
+</head>
+<body>
+<h1>Master Schedule</h1>
+<div class="subtitle" id="subtitle">Loading…</div>
+<div class="toolbar">
+  <div id="dayBtns" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+  <div class="spacer"></div>
+  <span class="status" id="statusMsg"></span>
+  <button class="refresh-btn" onclick="load()">↻ Refresh</button>
+</div>
+<div class="legend">
+  <span class="leg"><span class="leg-sq" style="background:#7cb94a"></span>assigned</span>
+  <span class="leg"><span class="leg-sq" style="background:#f59e0b"></span>conflict</span>
+  <span class="leg"><span class="leg-sq" style="background:#ef4444"></span>invalid cohort</span>
+</div>
+<div class="tbl-wrap"><table id="grid"><tr><td style="padding:20px;color:#888">Loading schedule…</td></tr></table></div>
+
+<script>
+const DB = '/home/brandon/Claude/Projects/School Scheduler/test2.db';
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+let activeDay = 0;
+let gridData = null;
+let violationSet = new Set(); // "className|timeslotName" for conflicts/invalids
+
+async function load() {
+  document.getElementById('statusMsg').innerHTML = '<span class="spinner"></span>';
+  try {
+    const [gridRes, valRes] = await Promise.all([
+      window.cowork.callMcpTool('mcp__excel-scheduler__grid', { db: DB }),
+      window.cowork.callMcpTool('mcp__excel-scheduler__validate', { db: DB })
+    ]);
+
+    const gRaw = gridRes.structuredContent ?? JSON.parse(gridRes.content[0].text);
+    const vRaw = valRes.structuredContent ?? JSON.parse(valRes.content[0].text);
+
+    gridData = gRaw;
+
+    violationSet = new Set();
+    (vRaw.violations || []).forEach(v => {
+      const key = v.Cell.Class + '|' + v.Cell.Timeslot;
+      violationSet.add(key + '|' + v.Rule);
+    });
+
+    const now = new Date();
+    document.getElementById('subtitle').textContent =
+      `${gridData.Classes.length} classes · ${gridData.Timeslots.length} timeslots · ${vRaw.violations.length} violation${vRaw.violations.length !== 1 ? 's' : ''}`;
+    document.getElementById('statusMsg').textContent = 'Updated ' + now.toLocaleTimeString();
+    render();
+  } catch(e) {
+    document.getElementById('grid').innerHTML = `<tr><td class="error-msg">Error loading schedule: ${e.message}</td></tr>`;
+    document.getElementById('statusMsg').textContent = 'Error';
+  }
+}
+
+function violationType(cls, timeslot) {
+  const hasConflict = violationSet.has(cls + '|' + timeslot + '|OneClassAtATime');
+  const hasInvalid = violationSet.has(cls + '|' + timeslot + '|AllCohorts');
+  if (hasInvalid) return 'invalid';
+  if (hasConflict) return 'conflict';
+  return null;
+}
+
+function render() {
+  if (!gridData) return;
+  const { Classes, Timeslots, Cells } = gridData;
+  const start = activeDay * 8;
+  const slotIdxs = Array.from({ length: 8 }, (_, i) => start + i);
+  const slotLabels = slotIdxs.map(i => Timeslots[i].split(', ')[1]);
+
+  let html = '<thead><tr><th class="class-col">Class</th>' +
+    slotLabels.map(l => `<th>${l}</th>`).join('') + '</tr></thead><tbody>';
+
+  Classes.forEach((cls, ci) => {
+    html += `<tr><td class="class-name">${cls}</td>`;
+    slotIdxs.forEach(si => {
+      const val = Cells[ci][si];
+      const ts = Timeslots[si];
+      let tdClass, display;
+      if (!val) {
+        tdClass = 'empty'; display = '';
+      } else {
+        const vtype = violationType(cls, ts);
+        if (vtype === 'invalid') { tdClass = 'invalid'; display = val + ' ✕'; }
+        else if (vtype === 'conflict') { tdClass = 'conflict'; display = val + ' ⚠'; }
+        else { tdClass = 'filled'; display = val; }
+      }
+      html += `<td class="${tdClass}">${display}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('grid').innerHTML = html;
+}
+
+function buildDayButtons() {
+  const wrap = document.getElementById('dayBtns');
+  DAYS.forEach((d, i) => {
+    const b = document.createElement('button');
+    b.className = 'day-btn' + (i === 0 ? ' active' : '');
+    b.textContent = d;
+    b.onclick = () => {
+      activeDay = i;
+      document.querySelectorAll('.day-btn').forEach((x, j) =>
+        x.className = 'day-btn' + (j === i ? ' active' : ''));
+      render();
+    };
+    wrap.appendChild(b);
+  });
+}
+
+buildDayButtons();
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>
